@@ -1,0 +1,468 @@
+@font-face {
+    font-family: 'intro';
+    src: url('../fonts/Intro-Trial-Rg.ttf');
+}
+@font-face {
+    font-family: 'quicksand';
+    src: url('../fonts/Quicksand-Regular.ttf');
+}
+
+html{
+    width: 100%;
+}
+
+body {
+    background-color: #e7ecea;
+}
+
+.name {
+    font-family: intro;
+    font-size: 150%;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.desc{
+    font-family: intro;
+    display: flex;
+    justify-content: center;
+    padding-bottom: 3%;
+    color: #74777b;
+}
+
+.github{
+    display: flex;
+    justify-content: right;
+    padding-right: 1%;
+    padding-top: .5%;
+}
+
+.link_github{
+    font-family: intro;
+    font-size: 110%;
+    padding-left: .5%;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #4299e1;
+}
+
+.link_github:hover{
+    color: #74777b;
+}
+
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+    min-width: 100%;
+    font-family: intro;
+    background-color: white;
+    height: 7%;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.tab {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-left: 1px solid #e7ecea;
+    border-bottom: 0.5rem solid transparent;
+    font-weight: bold;
+    color: #2CC185;
+    padding-right: 6%;
+    padding-left: 6%;
+    font-size: 150%;
+    transition: border-bottom 0.3s linear;
+}
+
+#tab_last {
+    border-right: 1px solid #e7ecea; 
+}
+
+.tab:hover {
+    color: #74777b;  
+}
+
+.tab:hover .icon {
+    stroke: #74777b; 
+}
+
+.tab.active{
+    border-bottom: 0.5rem solid #2CC185;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    
+}
+
+.tab-content.active {
+    display: block;
+}
+
+#tab1{
+    display: grid;
+    padding-top: 70px;
+    grid-template-rows: 100px 100px 350px 100px;
+    grid-template-columns: 1fr 1fr 1fr 0.5fr 1fr;
+    justify-items: center;
+    grid-gap: 2rem;
+
+}
+
+.search{
+    width: 23rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    border: none;
+    padding: 1rem;
+    font-family: quicksand;
+    font-size: 1.125rem;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.textarea_div{
+    grid-row: 1/3;
+    grid-column: 3/4;
+    
+}
+
+.textarea{
+    width: 23rem;
+    height: 37rem;
+    resize: none;
+    border: none;
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    font-size: 1.125rem;
+    font-family: quicksand;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; z-index: 1;
+}
+
+.checkboxes{
+    grid-row: 3/4;
+    grid-column: 4/5;
+    display: flex;
+    flex-direction: column;
+}
+
+.checkbox-item{
+    margin-bottom: 1rem;
+}
+
+.apply_changes{
+    width: 9rem;
+    height: 2rem;
+    font-family: quicksand;
+    font-size: 1.2rem;
+    text-align: center;
+    border: none;
+    border-radius: 1.5rem;
+    color: #2CC185;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: white;
+    transition: transform 0.2s ease;
+}
+
+.apply_changes:hover{
+    color: #666981;
+}
+
+.apply_changes:active{
+    transform: translateY(4px);
+}
+
+.reset_div{
+    padding-top: 1rem;
+}
+
+.reset{
+    width: 9rem;
+    height: 2rem;
+    font-family: quicksand;
+    font-size: 1.2rem;
+    text-align: center;
+    border: none;
+    border-radius: 1.5rem;
+    color: #2CC185;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: white;
+    transition: transform 0.2s ease;
+}
+
+.reset:hover{
+    color: #666981;
+}
+
+.reset:active{
+    transform: translateY(4px);
+}
+
+.label{
+    position: relative; 
+    font-family: quicksand;
+    font-size: 1.5rem;
+}
+
+.kaufland, .tesco, .all{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.dropdown {
+    display: inline-block;
+    grid-row: 1/2;
+    grid-column: 4/5;
+}
+
+.dropbtn {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border: none;
+    background-color: white;
+    border-radius: 1.5rem;
+    font-family: quicksand;
+    padding: 10px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.5s;
+    width: 14rem;
+}
+
+.dropbtn span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+  
+.dropbtn span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+  
+.dropbtn:hover span {
+    padding-right: 25px;
+}
+  
+.dropbtn:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+.dropdown-content {
+    background-color: white;
+    width: 14rem;
+    display: none;
+    position: absolute;
+    cursor: pointer;
+    border-radius: 1.5rem;
+    min-width: 160px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    z-index: 1;
+}
+
+.dropdown-content a {
+    border-radius: 1.5rem;
+    color: black;
+    font-family: quicksand;
+    font-size: 1.2rem;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+.dropdown-content a:hover{
+    backdrop-filter: blur(40px);
+    background-color: lightgray;
+    border: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.autocomplete {
+    display: inline-block;
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+    justify-content: center;
+    align-items: center;
+}
+
+.autocomplete .autocomplete-suggestions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 23rem;
+    font-size: 18px;
+    font-family: quicksand;
+    z-index: 100;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 20px;
+    border: none;
+    --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.autocomplete .autocomplete-suggestion {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.autocomplete .autocomplete-suggestion:hover {
+    background-color: #f4f4f4;
+}
+
+.return_button_div{
+    grid-row: 3/4;
+    grid-column: 3/4;
+    justify-self: end;
+    align-self: flex-end;
+    padding: 1rem;
+    padding-bottom: 2rem;
+}
+
+.return_button{
+    background: none;
+    border: none;
+    z-index: 2;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.return_button:active{
+    transform: translateY(4px);
+}
+
+.price_div{
+    grid-row: 4/5;
+    grid-column: 3/4;
+}
+
+.price{
+    font-family: quicksand;
+    font-size: 2rem;  
+}
+
+#tab2{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 500px 1fr;
+    justify-items: center;
+    grid-gap: 2rem;
+}
+
+#table-container{
+    grid-row: 2/3;
+    grid-column: 3/4;
+}
+
+#table-container2{
+    grid-row: 2/3;
+    grid-column: 1/2;
+}
+
+.table-name{
+    font-size: 3rem;
+    font-family: quicksand;
+}
+
+table {
+    font-family: quicksand;
+    font-size: 1.3rem;
+    border-radius: 1.5rem;
+    border-collapse: collapse;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: white;
+    text-align: left;
+    overflow: auto;
+    max-height: 500px;
+    padding-right: 0px;
+}
+
+table th {
+    background-color: #2CC185;
+    color: white;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    padding: 0.75rem 2rem;
+    letter-spacing: 0.1rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+  
+th.product_header {
+    border-top-left-radius: 1.5rem;
+}
+
+th.total_price_header{
+    border-top-right-radius: 1.5rem; 
+}
+
+.quantity-container{
+    height: 4.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quantity-input{
+    top: 50%;
+    width: 3rem;
+    height: 3rem;
+    font-family: quicksand;
+    font-size: 1.3rem;
+    text-align: center;
+    padding-bottom: 0.2rem;
+    border: none;
+}
+
+table td {
+    padding: 1rem 2rem;
+}
+
+.tablebtn-container{
+    grid-row: 1/2;
+    grid-column: 2/3;
+}
+
+#tablebtn{
+    width: 12rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    border: none;
+    background-color: white;
+    font-family: quicksand;
+    font-size: 1.3rem;
+    color: #2CC185;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: transform 0.2s ease;
+}
+
+#tablebtn:hover{
+    color: #74777b; 
+}
+
+#tablebtn:active{
+    transform: translateY(4px);
+}
+
+#total-price h1{
+    font-family: quicksand;
+}
