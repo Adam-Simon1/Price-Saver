@@ -12,7 +12,7 @@ body{
     font-family: quicksand;
     background-color: #e7ecea;
     display: grid;
-    grid-template-rows: 0.3fr 0.4fr 0.4fr 1fr;
+    grid-template-rows: 0.3fr 0.3fr 0.4fr 1fr;
     grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
 }
@@ -160,3 +160,26 @@ body{
     text-align: center;
 }
 
+.signin{
+    width: 20rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    border: none;
+    background-color: #2CC185;
+    font-family: quicksand;
+    font-size: 1.7rem;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: transform 0.2s ease;
+}
+
+.signin-container{
+    padding-bottom: .7rem;
+}
+
+.signin:hover{
+    color: #74777b;
+}
+
+.signin:active{
+    transform: translateY(5px);
+}
