@@ -1,0 +1,162 @@
+@font-face {
+    font-family: 'quicksand';
+    src: url('../fonts/Quicksand-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'quicksand_bold';
+    src: url('../fonts/Quicksand-Bold.ttf');
+}
+
+body{
+    font-family: quicksand;
+    background-color: #e7ecea;
+    display: grid;
+    grid-template-rows: 0.3fr 0.4fr 0.4fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+}
+
+.navigation {
+    grid-row: 1/2;
+    grid-column: 1/4;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid lightgray;
+}
+
+
+.signinbtn-container {
+    padding: 2rem;
+}
+
+#signinbtn{
+    width: 10rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    font-family: quicksand;
+    font-size: 1.7rem;
+    color: #2CC185;
+    border: 1px solid black;
+    background-color: #e7ecea;
+    transition: transform 0.2s ease;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+#signinbtn:hover{
+    color: #74777b;
+}
+
+#signinbtn:active{
+    transform: translateY(5px);
+}
+
+.github {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.link_github{
+    text-decoration: none;
+    color: #4299e1;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+
+.link_github:hover{
+    color: #74777b;
+}
+
+.login-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.title-container{
+    grid-row: 3/4;
+    grid-column: 2/3;
+    justify-self: center;
+}
+
+.title{
+    font-family: quicksand_bold;
+    font-size: 2.5rem;
+    grid-row: 2/3;
+    grid-column: 2/3;
+}
+
+.login-container{
+    grid-row: 4/5;
+    grid-column: 2/3;
+    justify-self: center;
+}
+
+.email, .password{
+    width: 20rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    padding: 1rem;
+    font-family: quicksand;
+    font-size: 1.2rem;
+    border: none;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.email-container{
+    padding-bottom: .5rem;
+}
+
+.password-container{
+    padding-bottom: 1rem;
+}
+
+.signup-container{
+    display: flex;
+    justify-content: center;
+}
+
+.signup{
+    color: #4299e1;
+    font-family: quicksand;
+    font-size: 1.2rem;
+}
+
+.githubbtn, .google{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    border: none;
+    background-color: white;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    transition: transform 0.2s ease;
+    font-family: quicksand;
+    font-size: 1.2rem;
+}
+
+.google img, .githubbtn img{
+    width: 2rem;
+    padding-right: 0.7rem;
+}
+
+.google-container{
+    padding-bottom: .5rem;
+}
+
+.githubbtn:active, .google:active{
+    transform: translateY(5px);
+}
+
+.or{
+    font-family: quicksand;
+    font-size: 1.1rem;
+}
+
+.or-container{
+    text-align: center;
+}
+
