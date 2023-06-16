@@ -3,10 +3,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign up</title>
-    <link rel="stylesheet" href="../css/signup.css" />
-    <script src="../js/startpage.js" defer></script>
-    <script src=".../node_modules/swup/dist/swup.min.js" defer></script>
-    <script src=".../node_modules/swup/dist/SwupSlideTheme.js"></script>
+    <link rel="stylesheet" href="css/signup.css" type="text/css"/>
+    <script src="js/index.js"></script>
   </head>
   <body>
     <nav class="navigation">
@@ -47,24 +45,24 @@
     <div class="signup-container">
       <div class="inputs">
         <div class="name-container">
-          <input type="text" class="name" placeholder="Name" />
+          <input type="text" class="name" placeholder="Name" id="name-signup"/>
         </div>
 
         <div class="email-container">
-          <input type="text" class="email" placeholder="E-mail" />
+          <input type="text" class="email" placeholder="E-mail" id="email-signup"/>
         </div>
 
         <div class="password-container">
-          <input type="text" class="password" placeholder="Password" />
+          <input type="text" class="password" placeholder="Password" id="password-signup"/>
         </div>
 
         <div class="signupbtn-container">
-          <button class="signupbtn">Sign up</button>
+          <button class="signupbtn" id="signupbtn">Sign up</button>
         </div>
 
         <div class="signin-container">
           <a
-            href="/html/login.html"
+            href="/login.html"
             class="signin"
             >Already have an account?</a
           >
