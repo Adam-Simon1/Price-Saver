@@ -139,3 +139,8 @@ body{
 .signin-container{
     text-align: center;
 }
+
+.password-container p{
+    text-align: center;
+    color: red;
+}

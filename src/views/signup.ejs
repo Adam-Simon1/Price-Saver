@@ -3,8 +3,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign up</title>
-    <link rel="stylesheet" href="css/signup.css" type="text/css"/>
-    <script src="js/index.js"></script>
+    <link rel="stylesheet" href="css/signup.css" type="text/css" />
+    <script src="js/index.js" defer></script>
+    <script src="js/signup_validation.js" defer></script>
   </head>
   <body>
     <nav class="navigation">
@@ -42,32 +43,43 @@
       <h1 class="title">Sign up</h1>
     </div>
 
-    <div class="signup-container">
+    <form action="/signup" method="post" class="signup-container">
       <div class="inputs">
         <div class="name-container">
-          <input type="text" class="name" placeholder="Name" id="name-signup"/>
+          <input type="text" class="name" placeholder="Name" id="name-signup" name="name" required/>
         </div>
 
         <div class="email-container">
-          <input type="text" class="email" placeholder="E-mail" id="email-signup"/>
+          <input
+            type="text"
+            class="email"
+            placeholder="E-mail"
+            id="email-signup"
+            name="email"
+            required
+          />
         </div>
 
         <div class="password-container">
-          <input type="text" class="password" placeholder="Password" id="password-signup"/>
+          <input
+            type="password"
+            class="password"
+            placeholder="Password"
+            id="password-signup"
+            name="password"
+            required
+          />
+          <p><%= invalidText %></p>
         </div>
 
         <div class="signupbtn-container">
-          <button class="signupbtn" id="signupbtn">Sign up</button>
+          <button class="signupbtn" id="signupbtn" type="submit">Sign up</button>
         </div>
 
         <div class="signin-container">
-          <a
-            href="/login.html"
-            class="signin"
-            >Already have an account?</a
-          >
+          <a href="#" onclick="openLink()" class="signin">Already have an account?</a>
         </div>
       </div>
-    </div>
+    </form>
   </body>
 </html>
