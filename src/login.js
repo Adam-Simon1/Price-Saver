@@ -5,8 +5,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config();
 const path = require("path");
+const cookieParser = require('cookie-parser');
 
 const app = express();
+app.use(cookieParser());
 
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
@@ -19,8 +21,25 @@ app.get("/signup", (req, res) => {
 });
 
 app.get("/signin", (req, res) => {
-  res.render("login");
+  res.render("login", { incorrectText: null });
 });
+
+function authenticateToken(req, res, next) {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.sendStatus(401); 
+  }
+
+  jwt.verify(token, '***REMOVED***', (err, user) => {
+    if (err) {
+      return res.sendStatus(403); 
+    }
+
+    req.user = user; 
+    next();
+  });
+}
 
 const connection = mysql.createConnection({
   host: "***REMOVED***",
@@ -36,15 +55,14 @@ connection.connect((error) => {
   console.log("Connected");
 });
 
-let name;
-let loggedin;
 app.post("/signup", (req, res) => {
   let hashedPassword;
   const username = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
-  const query =
+  const queryInsert =
     "INSERT INTO accounts (username, email, password) VALUES (?, ?, ?)";
+  const queryEmail = "SELECT * FROM accounts WHERE email = ?";
 
   if (username && email && password) {
     if (username.length < 3) {
@@ -72,45 +90,97 @@ app.post("/signup", (req, res) => {
       });
     }
 
-    bcrypt.genSalt(10, (error, salt) => {
-      if (error) {
-        console.log("Error generating salt:", error);
+    connection.query(queryEmail, [email], (err, results) => {
+      if (err) {
+        console.log("Error checking email:", err);
         return;
       }
 
-      bcrypt.hash(password, salt, (error, hash) => {
+      if (results.length > 0) {
+        return res.render("signup", { invalidText: "Email already exists" });
+      }
+
+      bcrypt.genSalt(10, (error, salt) => {
         if (error) {
-          console.log("Error hashing password:", error);
+          console.log("Error generating salt:", error);
           return;
         }
 
-        hashedPassword = hash;
-      });
-    });
-
-    setTimeout(() => {
-      connection.query(
-        query,
-        [username, email, hashedPassword],
-        (error, results) => {
+        bcrypt.hash(password, salt, (error, hash) => {
           if (error) {
-            console.log("Error:", error);
+            console.log("Error hashing password:", error);
+            return;
           }
 
-          res.redirect("/signin");
-          console.log("logged in succesfully");
-        }
-      );
-    }, 100);
+          hashedPassword = hash;
+        });
+      });
+
+      setTimeout(() => {
+        connection.query(
+          queryInsert,
+          [username, email, hashedPassword],
+          (error, results) => {
+            if (error) {
+              console.log("Error:", error);
+            }
+
+            res.redirect("/signin");
+            console.log("logged in succesfully");
+          }
+        );
+      }, 100);
+    });
   }
 });
 
-app.get("/home", (req, res) => {
-  if ((loggedin = true)) {
-    res.send("Welcome back " + name);
-  } else {
-    res.send("Not logged in");
+app.post("/auth", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  query = "SELECT * FROM accounts WHERE email = ?";
+  if (email && password) {
+    connection.query(query, [email], (err, results) => {
+      if (err) throw err;
+
+      if (results.length > 0) {
+        const storedHashedPassword = results[0].password;
+
+        bcrypt.compare(password, storedHashedPassword, (error, result) => {
+          if (error) {
+            console.log("Error comparing passwords:", error);
+            return;
+          }
+
+          if (result) {
+            const user = {
+              email: email,
+              username: results[0].username
+            };
+
+            const token = jwt.sign(user, '***REMOVED***', {
+              expiresIn: '1h'
+            });
+
+            res.cookie("token", token);
+
+            res.redirect("/home");
+          } else {
+            res.render("login", {
+              incorrectText: "Incorrect email and/or password",
+            });
+          }
+        });
+      } else {
+        res.render("login", {
+          incorrectText: "Incorrect email and/or password",
+        });
+      }
+    });
   }
+});
+
+app.get("/home", authenticateToken, (req, res) => {
+  res.send('protected');
 
   res.end();
 });

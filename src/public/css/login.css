@@ -183,3 +183,8 @@ body{
 .signin:active{
     transform: translateY(5px);
 }
+
+.password-container p{
+    color: red;
+    text-align: center;
+}
