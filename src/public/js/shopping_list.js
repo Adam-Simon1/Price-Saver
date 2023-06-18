@@ -1,117 +1,15 @@
-import { lastItem } from "./home.js";
 document.addEventListener("DOMContentLoaded", function () {
-  const textArea = document.getElementById("list-field");
-  const suggestionsContainer = document.querySelector(
-    ".autocomplete-suggestions"
-  );
-  const returnButton = document.getElementById("button-input");
-  const tableButton = document.getElementById("tablebtn");
-
-  let itemArrayTesco = [];
-  let itemArrayKaufland = [];
-
-  const tesco = "../csv/results_tesco.csv";
-  fetch(tesco)
-    .then((response) => response.text())
-    .then((data) => {
-      const dataArray = parseCSVData(data);
-
-      suggestionsContainer.addEventListener("click", function (event) {
-        setTimeout(function () {
-          if (dataArray.includes(lastItem)) {
-            itemArrayTesco.push(lastItem);
-
-            Cookies.set("tescoCookie", itemArrayTesco.toString(), {
-              expires: 1,
-            });
-          }
-        }, 10);
-      });
-
-      returnButton.addEventListener("click", function (event) {
-        itemArrayTesco.splice(itemArrayTesco.indexOf(lastItem, 1));
-
-        Cookies.set("tescoCookie", itemArrayTesco, { expires: 1 });
-      });
-
-      const tescoCookie = Cookies.get("tescoCookie");
-      itemArrayTesco.push(tescoCookie);
-
-      itemArrayTesco = itemArrayTesco[0].substring(1).split(",");
-      itemArrayTesco = itemArrayTesco.map((item) => item.trim());
-
-      let joinedArray = [];
-      for (let i = 0; i < itemArrayTesco.length; i += 2) {
-        if (itemArrayTesco[i + 1]) {
-          const joinedString = itemArrayTesco[i] + "," + itemArrayTesco[i + 1];
-          joinedArray.push(joinedString);
-        } else {
-          joinedArray.push(itemArrayTesco[i]);
-        }
-      }
-
-      itemArrayTesco = joinedArray;
-    })
-
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-
-  const kaufland = "../csv/results_kaufland.csv";
-  fetch(kaufland)
-    .then((response) => response.text())
-    .then((data) => {
-      const dataArray = parseCSVData(data);
-
-      suggestionsContainer.addEventListener("click", function (event) {
-        setTimeout(function () {
-          if (dataArray.includes(lastItem)) {
-            itemArrayKaufland.push(lastItem);
-
-            Cookies.set("kauflandCookie", itemArrayKaufland.toString(), {
-              expires: 1,
-            });
-          }
-        }, 10);
-      });
-
-      returnButton.addEventListener("click", function (event) {
-        itemArrayKaufland.splice(itemArrayKaufland.indexOf(lastItem, 1));
-
-        Cookies.set("kauflandCookie", itemArrayKaufland.toString(), {
-          expires: 1,
-        });
-      });
-
-      const kauflandCookie = Cookies.get("kauflandCookie");
-
-      itemArrayKaufland.push(kauflandCookie);
-
-      itemArrayKaufland = itemArrayKaufland[0].substring(1).split(",");
-      itemArrayKaufland = itemArrayKaufland.map((item) => item.trim());
-
-      let joinedArray = [];
-      for (let i = 0; i < itemArrayKaufland.length; i += 2) {
-        if (itemArrayKaufland[i + 1]) {
-          const joinedString =
-            itemArrayKaufland[i] + "," + itemArrayKaufland[i + 1];
-          joinedArray.push(joinedString);
-        } else {
-          joinedArray.push(itemArrayKaufland[i]);
-        }
-      }
-
-      itemArrayKaufland = joinedArray;
-    })
-
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-
-  function parseCSVData(csvData) {
-    const rows = csvData.split("\n");
-    return rows.map((row) => row.trim());
+  function retrieveArrayLocally(key) {
+    const storedArray = localStorage.getItem(key);
+    return JSON.parse(storedArray);
   }
+
+  const key1 = "kaufland";
+  const key2 = "tesco";
+  let itemArrayKaufland = retrieveArrayLocally(key1);
+  let itemArrayTesco = retrieveArrayLocally(key2);
+
+  const tableButton = document.getElementById("tablebtn");
 
   function tableTesco() {
     itemArrayTesco = [...new Set(itemArrayTesco)];
@@ -382,14 +280,15 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   tableButton.addEventListener("click", function () {
-    if (textArea.value !== "") {
-      if (itemArrayKaufland.length) {
-        tableKaufland();
-      }
-      if (itemArrayTesco.length) {
-        tableTesco();
-      }
+    console.log(itemArrayKaufland, itemArrayTesco);
+
+    if (itemArrayKaufland.length > 0) {
+      tableKaufland();
     }
+    if (itemArrayTesco.length > 0) {
+      tableTesco();
+    }
+
     EventListenersToQuantityInputs();
     sumUpTablePrices();
   });

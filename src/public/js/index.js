@@ -6,6 +6,14 @@ function openLink2() {
   window.location.href = "/signup";
 }
 
+function openLink3() {
+  window.location.href = "/search";
+}
+
+function openLink4() {
+  window.location.href = "/tables";
+}
+
 const loginForm = document.getElementById("login-form");
 
 loginForm.addEventListener("submit", (event) => {

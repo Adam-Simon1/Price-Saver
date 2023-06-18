@@ -12,8 +12,8 @@ body{
     font-family: quicksand;
     background-color: #e7ecea;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 0.5fr 0.7fr 1fr 0.5fr 3fr;
+    grid-template-columns: 0.5fr 1fr 0.5fr;
+    grid-template-rows: 0.5fr 0.7fr 1fr 0.5fr 2.5fr 3fr;
 }
 
 .navigation{
@@ -25,9 +25,11 @@ body{
 }
 
 .h-container{
-    grid-row: 3/4;
+    grid-row: 3/5;
     grid-column: 2/3;
     justify-self: center;
+    border-bottom: 1px solid lightgray;
+    padding-bottom: 1.5rem;
 }
 
 .h1-container{
@@ -69,10 +71,8 @@ body{
 }
 
 .signinbtn2-container{
-    grid-row: 4/5;
-    grid-column: 2/3;
-    justify-self: center;
-    align-self: center;
+    display: flex;
+    justify-content: center;
 }
 
 #signinbtn2{
@@ -121,4 +121,45 @@ body{
 
 #signinbtn:active{
     transform: translateY(5px);
+}
+
+.shop-list, .table{
+    border-radius: 1.5rem;
+    border: 1px solid #74777b;
+}
+
+.create-list{
+    grid-row: 5/6;
+    grid-column: 2/3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 0.5fr;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+}
+
+.text-list h1, .text-table h1{
+    font-family: quicksand_bold;
+    font-size: 1.5rem;
+}
+
+.text-list h2, .text-table h2{
+    font-family: quicksand;
+    color: #74777b;
+    font-size: 1.3rem;
+}
+
+.text-table h1, .text-table h2{
+    text-align: right;
+}
+
+.create-table{
+    grid-row: 6/7;
+    grid-column: 2/3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 0.5fr;
+    justify-content: center;
+    align-items: center;
 }

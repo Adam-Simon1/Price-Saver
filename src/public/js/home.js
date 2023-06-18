@@ -1,4 +1,5 @@
 let lastItem;
+
 // Starts after the html document is completely loaded and ready to go
 document.addEventListener("DOMContentLoaded", function () {
   // Importing all the elements
@@ -15,6 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const dropdownOptions = document.querySelectorAll(".dropdown-content a");
   const resetBtn = document.getElementById("resetbtn");
 
+  if (Cookies.get("priceCookie") == "") {
+    Cookies.set("priceCookie", 0, { expires: 1 });
+  }
   // Getting data from .csv file based on checkboxes
   let csvFiles = [];
 
@@ -68,9 +72,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Rendering the suggestions
         renderSuggestions(suggestions);
       });
-
-      // After clicking on a suggestion, it is added to a text area, and the input is cleared
       var totalPrice = 0;
+      // After clicking on a suggestion, it is added to a text area, and the input is cleared
       suggestionsContainer.addEventListener("click", function (event) {
         if (event.target.classList.contains("autocomplete-suggestion")) {
           const selectedSuggestion = event.target.innerText;
@@ -155,20 +158,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Adding into array if the checkboxes are checked
     if (tescoCheckbox.checked == true && kauflandCheckbox.checked == true) {
-      csvFiles = ["../csv/results_kaufland.csv", "../csv/results_tesco.csv"];
+      csvFiles = ["results_kaufland.csv", "results_tesco.csv"];
     } else if (kauflandCheckbox.checked == true) {
-      csvFiles = ["../csv/results_kaufland.csv"];
+      csvFiles = ["results_kaufland.csv"];
     } else if (tescoCheckbox.checked == true) {
-      csvFiles = ["../csv/results_tesco.csv"];
+      csvFiles = ["results_tesco.csv"];
     }
 
     // Removing from array if the checkboxes arent checked
     if (tescoCheckbox.checked == false && kauflandCheckbox.checked == false) {
       csvFiles = [];
     } else if (tescoCheckbox.checked == false) {
-      csvFiles = ["../csv/results_kaufland.csv"];
+      csvFiles = ["results_kaufland.csv"];
     } else if (kauflandCheckbox.checked == false) {
-      csvFiles = ["../csv/results_tesco.csv"];
+      csvFiles = ["results_tesco.csv"];
     }
 
     // Fething the promises from csvFiles array

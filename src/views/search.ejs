@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" href="../css/search.css">
+
+    <script src="../js/tabs.js" defer></script>
+    <script src="../js/home.js" type="module" defer></script>
+    <script src="../js/table-array.js" type="module" defer></script>
+    <script src="../js/index.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0"></script>
+</head>
+<body>
+    <div class="autocomplete">
+        <input class="search" id="inputField" type="text" placeholder="Type something...">
+        <div class="autocomplete-suggestions"></div>
+    </div>
+
+    <div class="checkboxes" id="checkboxes-id">
+      <div class="checkbox-item">
+        <input type="checkbox" name="checkbox" id="kaufland" class="kaufland" value="kaufland">
+        <label for="kaufland" class="label">Kaufland</label>
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" name="checkbox" id="tesco" class="tesco" value="tesco">
+        <label for="tesco" class="label">Tesco</label> 
+      </div>
+      <div class="checkbox-item">
+        <input type="checkbox" name="checkboxall" id="all" class="all" value="all">
+        <label for="all" class="label">All</label>
+      </div>
+
+      <div>
+        <button class="apply_changes" id="apply-changes" >Apply Changes</button>
+      </div>
+
+      <div class="reset_div">
+        <button class="reset" id="resetbtn">Reset</button>
+      </div>
+    </div>
+    
+    <div class="textarea_div">
+      <textarea class="textarea" name="ListField" id="list-field" cols="30" rows="10" readonly></textarea>   
+      <div class="price_div">
+        <h1 id="price-h1" class="price">Price: <span></span></h1>
+      </div>
+    </div>
+
+    <div class="return_button_div">
+      <button class="return_button" id="button-input">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon-arrow" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#74777b" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M9.586 4l-6.586 6.586a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.18 .434l.145 -.068a2 2 0 0 0 1.089 -1.78v-2.586h7a2 2 0 0 0 2 -2v-4l-.005 -.15a2 2 0 0 0 -1.995 -1.85l-7 -.001v-2.585a2 2 0 0 0 -3.414 -1.414z" stroke-width="0" fill="currentColor" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="dropdown">
+      <button class="dropbtn" id="dropbtn"><span id="dropdown-text">Select the price </span></button>
+      <div class="dropdown-content">
+        <a data-value="lowest-highest">Lowest to Highest</a>
+        <a data-value="highest-lowest">Highest to Lowest</a>
+        <a data-value="a-z">A-Z Sorted</a>
+        <a data-value="z-a">Z-A Sorted</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="next-container">
+    <h1>Are you finished creating your list of products?</h1>
+    <h2>Proceed to the next page to create a table of your products:</h2>
+    <div class="btn-container">
+      <button id="next-page" onclick="openLink4()">Go to the next page</button>
+    </div>
+  </div>
+</body>
+</html>

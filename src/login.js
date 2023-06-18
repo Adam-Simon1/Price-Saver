@@ -3,7 +3,9 @@ const express = require("express");
 const expressSession = require("express-session");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config({
+  path: `${__dirname}/envvars.env`
+});
 const path = require("path");
 const cookieParser = require('cookie-parser');
 
@@ -11,10 +13,15 @@ const app = express();
 app.use(cookieParser());
 
 app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/csv"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+app.get('/startpage', (req, res) => {
+  res.render('index');
+})
 
 app.get("/signup", (req, res) => {
   res.render("signup", { invalidText: null });
@@ -24,6 +31,14 @@ app.get("/signin", (req, res) => {
   res.render("login", { incorrectText: null });
 });
 
+app.get("/search", (req, res) => {
+  res.render('search');
+})
+
+app.get('/tables', (req, res) => {
+  res.render('tables');
+})
+
 function authenticateToken(req, res, next) {
   const token = req.cookies.token;
 
@@ -31,7 +46,7 @@ function authenticateToken(req, res, next) {
     return res.sendStatus(401); 
   }
 
-  jwt.verify(token, '***REMOVED***', (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       return res.sendStatus(403); 
     }
@@ -42,10 +57,10 @@ function authenticateToken(req, res, next) {
 }
 
 const connection = mysql.createConnection({
-  host: "***REMOVED***",
-  user: "***REMOVED***",
-  password: "***REMOVED***",
-  database: "***REMOVED***",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 });
 
 connection.connect((error) => {
@@ -157,7 +172,7 @@ app.post("/auth", (req, res) => {
               username: results[0].username
             };
 
-            const token = jwt.sign(user, '***REMOVED***', {
+            const token = jwt.sign(user, process.env.JWT_SECRET, {
               expiresIn: '1h'
             });
 
@@ -180,7 +195,7 @@ app.post("/auth", (req, res) => {
 });
 
 app.get("/home", authenticateToken, (req, res) => {
-  res.send('protected');
+  res.render('home');
 
   res.end();
 });
