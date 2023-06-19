@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
   function retrieveArrayLocally(key) {
     const storedArray = localStorage.getItem(key);
@@ -10,6 +11,18 @@ document.addEventListener("DOMContentLoaded", function () {
   let itemArrayTesco = retrieveArrayLocally(key2);
 
   const tableButton = document.getElementById("tablebtn");
+  const saveButton = document.getElementById("savebtn");
+
+  saveButton.addEventListener("click", () => {
+    axios
+      .post("/table/data", { arrayDataTesco: itemArrayTesco, arrayDataKaufland: itemArrayKaufland })
+      .then((response) => {
+        console.log("Data sent successfully");
+      })
+      .catch((err) => {
+        console.log("Error sending data:", err);
+      });
+  });
 
   function tableTesco() {
     itemArrayTesco = [...new Set(itemArrayTesco)];

@@ -140,6 +140,38 @@ table td {
     align-self: center;
 }
 
+.savebtn{
+    width: 10rem;
+    height: 3rem;
+    border-radius: 1.5rem;
+    border: none;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background-color: #2CC185;
+    color: white;
+    font-family: quicksand;
+    font-size: 1.5rem;
+    transition: transform 0.2s ease;
+}
+
+.savebtn:hover{
+    color: #74777b;
+}
+
+.savebtn:active{
+    transform: translateY(5px);
+}
+
+.save{
+    grid-row: 4/5;
+    grid-column: 2/3;
+    justify-self: center;
+}
+
+.save p{
+    font-size: 5rem;
+    color: black;
+}
+
 @media only screen and (max-width: 1500px){
     body{
         grid-template-columns: 1fr 1fr 1fr; 
@@ -212,6 +244,12 @@ table td {
     
     .quantity-input{
         font-size: 1rem;  
+    }
+    
+    .save{
+        grid-column: 1/2;
+        grid-row: 1/2;
+        align-self: center;
     }
 }
 

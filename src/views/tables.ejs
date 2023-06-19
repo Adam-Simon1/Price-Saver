@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tables</title>
-    <link rel="stylesheet" href="../css/tables.css">
+    <link rel="stylesheet" href="../css/tables.css" />
     <script src="../js/shopping_list.js" type="module" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
   </head>
   <body>
     <div class="tablebtn-container">
@@ -21,5 +22,10 @@
     <div id="table-container2"></div>
 
     <div id="total-price"></div>
+
+    <div class="save">
+      <button class="savebtn" id="savebtn">Save</button>
+      <p><%= saved %></p>
+    </div>
   </body>
 </html>
