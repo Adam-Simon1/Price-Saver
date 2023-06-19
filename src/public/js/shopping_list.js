@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function () {
   function retrieveArrayLocally(key) {
     const storedArray = localStorage.getItem(key);
@@ -15,7 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   saveButton.addEventListener("click", () => {
     axios
-      .post("/table/data", { arrayDataTesco: itemArrayTesco, arrayDataKaufland: itemArrayKaufland })
+      .post("/table/data", {
+        arrayDataTesco: itemArrayTesco,
+        arrayDataKaufland: itemArrayKaufland,
+      })
       .then((response) => {
         console.log("Data sent successfully");
       })

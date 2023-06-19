@@ -167,9 +167,12 @@ table td {
     justify-self: center;
 }
 
-.save p{
-    font-size: 5rem;
-    color: black;
+.message{
+    font-family: quicksand;
+    font-size: 2rem;
+    color: #2CC185;
+    z-index: 2;
+    text-align: center;
 }
 
 @media only screen and (max-width: 1500px){

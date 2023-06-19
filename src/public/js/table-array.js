@@ -1,16 +1,29 @@
 import { lastItem } from "./home.js";
 
-
 document.addEventListener("DOMContentLoaded", function () {
-    
-  let itemArrayTesco = [];
-  let itemArrayKaufland = [];  
   const textArea = document.getElementById("list-field");
   const suggestionsContainer = document.querySelector(
     ".autocomplete-suggestions"
   );
   const returnButton = document.getElementById("button-input");
   const nextPage = document.getElementById("next-page");
+
+  document.addEventListener("visibilitychange", () => {
+    const textareaValue = Cookies.get("textareaCookie");
+    console.log(textareaValue);
+    const textareaValueModified = textareaValue.split("\n").join("\n");
+    textArea.value = textareaValueModified;
+  });
+
+  document.addEventListener("beforeunload", () => {
+    const textareaValue = Cookies.get("textareaCookie");
+    console.log(textareaValue);
+    const textareaValueModified = textareaValue.split("\n").join("\n");
+    textArea.value = textareaValueModified;
+  });
+
+  let itemArrayTesco = [];
+  let itemArrayKaufland = [];
 
   const tesco = "results_tesco.csv";
   fetch(tesco)
@@ -21,6 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
       suggestionsContainer.addEventListener("click", function (event) {
         setTimeout(function () {
           if (dataArray.includes(lastItem)) {
+            const textareaValueC = textArea.value;
+            Cookies.set("textareaCookie", textareaValueC, {
+              expires: 1,
+            });
+
             itemArrayTesco.push(lastItem);
 
             Cookies.set("tescoCookie", itemArrayTesco.toString(), {
@@ -32,6 +50,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       returnButton.addEventListener("click", function (event) {
         itemArrayTesco.splice(itemArrayTesco.indexOf(lastItem, 1));
+
+        setTimeout(() => {
+          const textareaValueC = textArea.value;
+          Cookies.set("textareaCookie", textareaValueC, {
+            expires: 1,
+          });
+        }, 100);
 
         Cookies.set("tescoCookie", itemArrayTesco, { expires: 1 });
       });
@@ -53,7 +78,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       itemArrayTesco = joinedArray;
-      console.log(itemArrayTesco);
     })
 
     .catch((error) => {
@@ -69,6 +93,10 @@ document.addEventListener("DOMContentLoaded", function () {
       suggestionsContainer.addEventListener("click", function (event) {
         setTimeout(function () {
           if (dataArray.includes(lastItem)) {
+            const textareaValueC = textArea.value;
+            Cookies.set("textareaCookie", textareaValueC, {
+              expires: 1,
+            });
             itemArrayKaufland.push(lastItem);
 
             Cookies.set("kauflandCookie", itemArrayKaufland.toString(), {
@@ -81,6 +109,13 @@ document.addEventListener("DOMContentLoaded", function () {
       returnButton.addEventListener("click", function (event) {
         itemArrayKaufland.splice(itemArrayKaufland.indexOf(lastItem, 1));
 
+        setTimeout(() => {
+          const textareaValueC = textArea.value;
+          Cookies.set("textareaCookie", textareaValueC, {
+            expires: 1,
+          });
+        }, 100);
+        
         Cookies.set("kauflandCookie", itemArrayKaufland.toString(), {
           expires: 1,
         });
@@ -111,10 +146,15 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error fetching data:", error);
     });
 
-  nextPage.addEventListener('click', () => {
+  nextPage.addEventListener("click", () => {
     saveArrayLocally(itemArrayKaufland, key1);
     saveArrayLocally(itemArrayTesco, key2);
-  })
+
+    const textareaValueC = textArea.value;
+    Cookies.set("textareaCookie", textareaValueC, {
+      expires: 1,
+    });
+  });
 
   function parseCSVData(csvData) {
     const rows = csvData.split("\n");
@@ -126,5 +166,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const key1 = "kaufland";
-  const key2 = 'tesco'
+  const key2 = "tesco";
 });

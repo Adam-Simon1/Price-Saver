@@ -38,7 +38,7 @@ app.get("/search", (req, res) => {
 });
 
 app.get("/tables", (req, res) => {
-  res.render("tables", { saved: null });
+  res.render("tables", { Saved: null });
 });
 
 const connection = mysql.createConnection({
@@ -152,7 +152,6 @@ app.post("/auth", (req, res) => {
           }
 
           if (result) {
-            console.log(results[0]);
             const user = {
               id: results[0].id,
               email: email,
@@ -222,7 +221,6 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
           }
         }
       );
-
     } else {
       console.log("User id exists, checking empty columns...");
       connection.query(countEmptyColumnQuery, (err, results) => {
@@ -240,18 +238,20 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
                 console.log("Empty error:", err);
               }
               emptyColumn = results[0].empty_count;
-              console.log(emptyColumn);
 
               if (emptyColumn > 0 && !columnFound) {
                 columnFound = true;
                 console.log("Empty column found:", i);
-                
+
                 connection.query(
                   `UPDATE producttables SET table${i} = ? WHERE id = ?`,
                   [combinedArray, userID],
                   (err, results) => {
                     if (err) {
                       console.log("Error inserting array:", err);
+                    } else {
+                      console.log('s')
+                      return res.render("tables", { Saved: "Saved successfully" });
                     }
                   }
                 );
