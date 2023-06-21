@@ -6,6 +6,9 @@
     <title>Home</title>
     <link rel="stylesheet" href="../css/home.css" />
     <script src="../js/index.js"></script>
+    <script src="../js/logout-menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   </head>
   <body>
     <nav class="navigation">
@@ -36,8 +39,36 @@
       <div class="shopping-lists-container">
         <button class="shopping-lists-btn">Shopping Lists</button>
       </div>
+
       <div class="profile-container">
-        <button class="profile-btn">Profile</button>
+        <div class="dropdown">
+          <button class="profile-btn" id="profile-btn">Profile</button>
+
+          <div class="dropdown-content" id="dropdown-content">
+            <a href="">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="icon-logout"
+                width="27"
+                height="27"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="#000000"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path
+                  d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
+                />
+                <path d="M9 12h12l-3 -3" />
+                <path d="M18 15l3 -3" />
+              </svg>
+              Sign out
+            </a>
+          </div>
+        </div>
       </div>
     </nav>
 

@@ -6,7 +6,7 @@
     <title>Search</title>
     <link rel="stylesheet" href="../css/search.css">
 
-    <script src="../js/tabs.js" defer></script>
+    <script src="../js/price-dropdown.js" defer></script>
     <script src="../js/home.js" type="module" defer></script>
     <script src="../js/table-array.js" type="module" defer></script>
     <script src="../js/index.js" defer></script>
@@ -33,13 +33,16 @@
         <label for="all" class="label">All</label>
       </div>
 
-      <div>
-        <button class="apply_changes" id="apply-changes" >Apply Changes</button>
-      </div>
+      <div class="buttons">
+        <div>
+          <button class="apply_changes" id="apply-changes" >Apply Changes</button>
+        </div>
 
-      <div class="reset_div">
-        <button class="reset" id="resetbtn">Reset</button>
+        <div class="reset_div">
+          <button class="reset" id="resetbtn">Reset</button>
+        </div>
       </div>
+      
     </div>
     
     <div class="textarea_div">
@@ -59,8 +62,8 @@
     </div>
 
     <div class="dropdown">
-      <button class="dropbtn" id="dropbtn"><span id="dropdown-text">Select the price </span></button>
-      <div class="dropdown-content">
+      <button class="dropbtn" id="dropbtn">Select the price</button>
+      <div class="dropdown-content" id="dropdown-content">
         <a data-value="lowest-highest">Lowest to Highest</a>
         <a data-value="highest-lowest">Highest to Lowest</a>
         <a data-value="a-z">A-Z Sorted</a>

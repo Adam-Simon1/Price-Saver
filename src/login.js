@@ -33,11 +33,11 @@ app.get("/signin", (req, res) => {
   res.render("login", { incorrectText: null });
 });
 
-app.get("/search", (req, res) => {
+app.get("/search", authUser.authenticateToken, (req, res) => {
   res.render("search");
 });
 
-app.get("/tables", (req, res) => {
+app.get("/tables", authUser.authenticateToken, (req, res) => {
   res.render("tables", { Saved: null });
 });
 
@@ -159,7 +159,7 @@ app.post("/auth", (req, res) => {
             };
 
             const token = jwt.sign(user, process.env.JWT_SECRET, {
-              expiresIn: "1h",
+              expiresIn: "24h",
             });
 
             res.cookie("token", token);
@@ -250,8 +250,10 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
                     if (err) {
                       console.log("Error inserting array:", err);
                     } else {
-                      console.log('s')
-                      return res.render("tables", { Saved: "Saved successfully" });
+                      console.log("s");
+                      return res.render("tables", {
+                        Saved: "Saved successfully",
+                      });
                     }
                   }
                 );

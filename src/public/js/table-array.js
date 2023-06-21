@@ -8,19 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const returnButton = document.getElementById("button-input");
   const nextPage = document.getElementById("next-page");
 
-  document.addEventListener("visibilitychange", () => {
-    const textareaValue = Cookies.get("textareaCookie");
-    console.log(textareaValue);
-    const textareaValueModified = textareaValue.split("\n").join("\n");
-    textArea.value = textareaValueModified;
-  });
-
-  document.addEventListener("beforeunload", () => {
-    const textareaValue = Cookies.get("textareaCookie");
-    console.log(textareaValue);
-    const textareaValueModified = textareaValue.split("\n").join("\n");
-    textArea.value = textareaValueModified;
-  });
+  const textareaValue = Cookies.get("textareaCookie");
+  console.log(textareaValue);
+  const textareaValueModified = textareaValue.split("\n").join("\n");
+  textArea.value = textareaValueModified;
 
   let itemArrayTesco = [];
   let itemArrayKaufland = [];
@@ -115,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
             expires: 1,
           });
         }, 100);
-        
+
         Cookies.set("kauflandCookie", itemArrayKaufland.toString(), {
           expires: 1,
         });
