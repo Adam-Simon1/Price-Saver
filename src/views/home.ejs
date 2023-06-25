@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
     <link rel="stylesheet" href="../css/home.css" />
-    <script src="../js/index.js"></script>
-    <script src="../js/logout-menu.js"></script>
+    <script src="../js/index.js" defer></script>
+    <script src="../js/logout-menu.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   </head>
@@ -36,8 +36,11 @@
           >Open my repository</a
         >
       </div>
+
       <div class="shopping-lists-container">
-        <button class="shopping-lists-btn">Shopping Lists</button>
+        <button class="shopping-lists-btn" name="listbtn" id="listbtn" onclick="openLink5()">
+          Shopping Lists
+        </button>
       </div>
 
       <div class="profile-container">
@@ -115,5 +118,14 @@
         </h2>
       </div>
     </article>
+
+    <script>
+      const listBtn = document.getElementById("listbtn");
+
+      listBtn.addEventListener("click", () => {
+        console.log("pressed");
+        axios.post('/lists', {}).catch(err);
+      });
+    </script>
   </body>
 </html>

@@ -8,10 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const returnButton = document.getElementById("button-input");
   const nextPage = document.getElementById("next-page");
 
-  const textareaValue = Cookies.get("textareaCookie");
-  console.log(textareaValue);
-  const textareaValueModified = textareaValue.split("\n").join("\n");
-  textArea.value = textareaValueModified;
+  const cookieValue = Cookies.get("textareaCookie");
+  if (cookieValue !== undefined) {
+    const textareaValue = Cookies.get("textareaCookie");
+    console.log(textareaValue);
+    const textareaValueModified = textareaValue.split("\n").join("\n");
+    textArea.value = textareaValueModified;
+  }
 
   let itemArrayTesco = [];
   let itemArrayKaufland = [];

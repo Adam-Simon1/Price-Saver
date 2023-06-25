@@ -14,10 +14,14 @@ function openLink4() {
   window.location.href = "/tables";
 }
 
+function openLink5() {
+  window.location.href = "/shopping-lists";
+}
+
 const loginForm = document.getElementById("login-form");
 
 loginForm.addEventListener("submit", (event) => {
-  event.preventDefault(); 
+  event.preventDefault();
 
   document.getElementById("email").value = "";
   document.getElementById("password").value = "";

@@ -22,7 +22,12 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.get("/startpage", (req, res) => {
-  res.render("index");
+  const token = req.cookies.token;
+  if (token) {
+    res.redirect("/home");
+  } else {
+    res.render("index");
+  }
 });
 
 app.get("/signup", (req, res) => {
@@ -39,6 +44,14 @@ app.get("/search", authUser.authenticateToken, (req, res) => {
 
 app.get("/tables", authUser.authenticateToken, (req, res) => {
   res.render("tables", { Saved: null });
+});
+
+app.get("/shopping-lists", (req, res) => {
+  res.render("shopping-lists", { tableCountEjs: null });
+});
+
+app.get("/saved-tables", (req, res) => {
+  res.render("saved-tables");
 });
 
 const connection = mysql.createConnection({
@@ -184,13 +197,29 @@ app.get("/home", authUser.authenticateToken, (req, res) => {
   res.render("home");
 });
 
+let insertColumn;
+let columnArray = [];
 app.post("/table/data", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
   const arrayDataTesco = req.body.arrayDataTesco;
   const arrayDataKaufland = req.body.arrayDataKaufland;
-  const serializedTesco = JSON.stringify(arrayDataTesco);
-  const serializedKaufland = JSON.stringify(arrayDataKaufland);
-  const combinedArray = serializedTesco + ":" + serializedKaufland;
+  let serializedTesco;
+  let serializedKaufland;
+  let combinedArray;
+
+  if (arrayDataTesco && arrayDataKaufland) {
+    serializedTesco = JSON.stringify(arrayDataTesco);
+    serializedKaufland = JSON.stringify(arrayDataKaufland);
+    combinedArray = serializedTesco + ":" + serializedKaufland;
+  } else if (arrayDataTesco) {
+    serializedTesco = JSON.stringify(arrayDataTesco);
+    combinedArray = serializedTesco + 't';
+  } else if (arrayDataKaufland) {
+    serializedKaufland = JSON.stringify(arrayDataKaufland);
+    combinedArray = serializedKaufland + 'k';
+  }
+
+  const tableName = "Table1";
 
   const userIdExistQuery = "SELECT * FROM producttables WHERE id = ?";
   const insertUserIdQuery = "INSERT INTO producttables (id) VALUES (?)";
@@ -205,6 +234,11 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
 
     if (results.length == 0) {
       console.log("Inserting user id...");
+      columnArray.push(1);
+      const expirationDate = new Date(Date.now() + 3650 * 24 * 60 * 60 * 1000);
+      res.cookie("idCookie", JSON.stringify(columnArray), {
+        expires: expirationDate,
+      });
 
       connection.query(insertUserIdQuery, [userID], (err, results) => {
         if (err) {
@@ -215,6 +249,26 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
       connection.query(
         "UPDATE producttables SET table1 = ? WHERE id = ?",
         [combinedArray, userID],
+        (err, results) => {
+          if (err) {
+            console.log("Error inserting id and array:", err);
+          }
+        }
+      );
+
+      connection.query(
+        "INSERT INTO tablenames (id) VALUES (?)",
+        [userID],
+        () => {
+          if (err) {
+            console.log("Error inserting user id:", err);
+          }
+        }
+      );
+
+      connection.query(
+        "UPDATE tablenames SET name1 = ? WHERE id = ?",
+        [tableName, userID],
         (err, results) => {
           if (err) {
             console.log("Error inserting id and array:", err);
@@ -232,7 +286,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
         let columnFound = false;
         for (let i = 1; i < columnCount; i++) {
           connection.query(
-            `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NULL`,
+            `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NULL AND id = ${userID}`,
             (err, results) => {
               if (err) {
                 console.log("Empty error:", err);
@@ -242,6 +296,15 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
               if (emptyColumn > 0 && !columnFound) {
                 columnFound = true;
                 console.log("Empty column found:", i);
+                insertColumn = i;
+                columnArray.push(insertColumn);
+
+                const expirationDate = new Date(
+                  Date.now() + 3650 * 24 * 60 * 60 * 1000
+                );
+                res.cookie("idCookie", JSON.stringify(columnArray), {
+                  expires: expirationDate,
+                });
 
                 connection.query(
                   `UPDATE producttables SET table${i} = ? WHERE id = ?`,
@@ -250,10 +313,19 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
                     if (err) {
                       console.log("Error inserting array:", err);
                     } else {
-                      console.log("s");
                       return res.render("tables", {
                         Saved: "Saved successfully",
                       });
+                    }
+                  }
+                );
+
+                connection.query(
+                  `UPDATE tablenames SET name${i} = ? WHERE id = ?`,
+                  [tableName, userID],
+                  (err, results) => {
+                    if (err) {
+                      console.log("Error inserting name:", err);
                     }
                   }
                 );
@@ -264,6 +336,85 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
       });
     }
   });
+});
+
+app.post("/lists", authUser.authenticateToken, (req, res) => {
+  const userID = req.user.id;
+  const countEmptyColumnQuery = `SELECT COUNT(*) AS column_count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '***REMOVED***' AND TABLE_NAME = 'producttables';`;
+  let tableCount = 0;
+
+  connection.query(countEmptyColumnQuery, (err, results) => {
+    if (err) {
+      console.log(err);
+    }
+    const columnCount = results[0].column_count - 1;
+
+    let emptyColumn;
+    let completedQueries = 0;
+    for (let i = 1; i < columnCount; i++) {
+      connection.query(
+        `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NOT NULL AND id = ?`,
+        [userID],
+        (err, results) => {
+          if (err) {
+            console.log("Empty error:", err);
+          }
+          emptyColumn = results[0].empty_count;
+          if (emptyColumn > 0) {
+            tableCount++;
+          }
+
+          completedQueries++;
+
+          if (completedQueries === columnCount - 1) {
+            res.json({ tableCount, insertColumn });
+          }
+        }
+      );
+    }
+  });
+});
+
+app.post("/remove-table", authUser.authenticateToken, (req, res) => {
+  const userID = req.user.id;
+  const tableNumber = req.body.tableNumber;
+  try {
+    connection.query(
+      `UPDATE producttables SET table${tableNumber} = NULL WHERE id = ?`,
+      [userID],
+      (err, results) => {
+        if (err) {
+          console.log("Error removing a column:", err);
+        } else {
+          console.log("Removed successfully");
+        }
+      }
+    );
+  } catch (error) {}
+});
+
+let array;
+app.post("/open-table", authUser.authenticateToken, (req, res) => {
+  const userID = req.user.id;
+  const tableNumber = req.body.tableNumber;
+
+  try {
+    connection.query(
+      `SELECT table${tableNumber} FROM producttables WHERE id = ?`,
+      [userID],
+      (err, results) => {
+        if (err) {
+          console.log("Error extracting a column:", err);
+        } else {
+          array = results[0]["table" + tableNumber.toString()];
+        }
+      }
+    );
+  } catch (error) {}
+});
+
+app.post("/send-array", authUser.authenticateToken, (req, res) => {
+  res.json({ array });
 });
 
 app.listen(3000);
