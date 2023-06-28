@@ -56,6 +56,7 @@ app.get("/saved-tables", (req, res) => {
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
@@ -417,4 +418,4 @@ app.post("/send-array", authUser.authenticateToken, (req, res) => {
   res.json({ array });
 });
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
