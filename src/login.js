@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-app.get("/startpage", (req, res) => {
+app.get("/", (req, res) => {
   const token = req.cookies.token;
   if (token) {
     res.redirect("/home");
