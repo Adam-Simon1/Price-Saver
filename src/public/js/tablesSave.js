@@ -88,21 +88,24 @@ fetch("/lists", { method: "POST" })
               .then((response) => response.json())
               .then((data) => {
                 const combinedArray = data.array;
+                const jsonString = combinedArray.substring(1, combinedArray.length - 1);
+                const obj = JSON.parse(jsonString);
+                
                 let itemArrayKauflandString;
                 let itemArrayTescoString;
                 let itemArrayTesco;
                 let itemArrayKaufland;
 
-                if (combinedArray.includes(":")) {
-                  itemArrayTescoString = combinedArray.split(":")[0];
-                  itemArrayKauflandString = combinedArray.split(":")[1];
+                if (obj.includes(":")) {
+                  itemArrayTescoString = obj.split(":")[0];
+                  itemArrayKauflandString = obj.split(":")[1];
                   itemArrayTesco = JSON.parse(itemArrayTescoString);
                   itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-                } else if (combinedArray.includes("t")) {
-                  itemArrayTescoString = combinedArray.replace("t", "");
+                } else if (obj.includes("t")) {
+                  itemArrayTescoString = obj.replace("t", "");
                   itemArrayTesco = JSON.parse(itemArrayTescoString);
-                } else if (combinedArray.includes("k")) {
-                  itemArrayKauflandString = combinedArray.replace("k", "");
+                } else if (obj.includes("k")) {
+                  itemArrayKauflandString = obj.replace("k", "");
                   itemArrayKaufland = JSON.parse(itemArrayKauflandString);
                 }
 

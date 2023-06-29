@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   content.addEventListener("click", (event) => {
     event.preventDefault();
-    window.location.href = '/startpage';
+    window.location.href = '/';
     Cookies.remove('token');
   });
 });

@@ -1,4 +1,5 @@
-const mysql = require("mysql2");
+//const mysql = require("mysql2");
+const { Client } = require("pg");
 const express = require("express");
 const expressSession = require("express-session");
 const jwt = require("jsonwebtoken");
@@ -54,12 +55,15 @@ app.get("/saved-tables", (req, res) => {
   res.render("saved-tables");
 });
 
-const connection = mysql.createConnection({
+const connection = new Client({
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
   user: process.env.DB_USER,
+  port: process.env.DB_PORT,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 connection.connect((error) => {
@@ -75,8 +79,8 @@ app.post("/signup", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const queryInsert =
-    "INSERT INTO accounts (username, email, password) VALUES (?, ?, ?)";
-  const queryEmail = "SELECT * FROM accounts WHERE email = ?";
+    "INSERT INTO accounts (username, email, password) VALUES ($1, $2, $3)";
+  const queryEmail = "SELECT * FROM accounts WHERE email = $1";
 
   if (username && email && password) {
     if (username.length < 3) {
@@ -151,13 +155,16 @@ app.post("/signup", (req, res) => {
 app.post("/auth", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  query = "SELECT * FROM accounts WHERE email = ?";
+  query = "SELECT * FROM accounts WHERE email = $1";
   if (email && password) {
     connection.query(query, [email], (err, results) => {
-      if (err) throw err;
+      if (err){
+        console.log(err);
+      };
 
-      if (results.length > 0) {
-        const storedHashedPassword = results[0].password;
+      //console.log(results.rows[0].username);
+      if (results.rows.length > 0) {
+        const storedHashedPassword = results.rows[0].password;
 
         bcrypt.compare(password, storedHashedPassword, (error, result) => {
           if (error) {
@@ -167,11 +174,11 @@ app.post("/auth", (req, res) => {
 
           if (result) {
             const user = {
-              id: results[0].id,
+              id: results.rows[0].id,
               email: email,
-              username: results[0].username,
+              username: results.rows[0].username,
             };
-
+            
             const token = jwt.sign(user, process.env.JWT_SECRET, {
               expiresIn: "24h",
             });
@@ -211,29 +218,29 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
   if (arrayDataTesco && arrayDataKaufland) {
     serializedTesco = JSON.stringify(arrayDataTesco);
     serializedKaufland = JSON.stringify(arrayDataKaufland);
-    combinedArray = serializedTesco + ":" + serializedKaufland;
+    combinedArray = [serializedTesco + ":" + serializedKaufland];
   } else if (arrayDataTesco) {
     serializedTesco = JSON.stringify(arrayDataTesco);
-    combinedArray = serializedTesco + 't';
+    combinedArray = serializedTesco + "t";
   } else if (arrayDataKaufland) {
     serializedKaufland = JSON.stringify(arrayDataKaufland);
-    combinedArray = serializedKaufland + 'k';
+    combinedArray = serializedKaufland + "k";
   }
 
   const tableName = "Table1";
 
-  const userIdExistQuery = "SELECT * FROM producttables WHERE id = ?";
-  const insertUserIdQuery = "INSERT INTO producttables (id) VALUES (?)";
-  const countEmptyColumnQuery = `SELECT COUNT(*) AS column_count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '***REMOVED***' AND TABLE_NAME = 'producttables';`;
+  const userIdExistQuery = "SELECT * FROM producttables WHERE id = $1";
+  const insertUserIdQuery = "INSERT INTO producttables (id) VALUES ($1)";
+  const countEmptyColumnQuery = `SELECT count(*) FROM information_schema.columns WHERE table_name = 'producttables' AND table_schema = 'public';`;
 
   connection.query(userIdExistQuery, [userID], (err, results) => {
     if (err) {
       console.log("Error checking user id:", err);
     }
 
-    console.log("Results length:", results.length);
+    console.log("Results length:", results.rows.length);
 
-    if (results.length == 0) {
+    if (results.rows.length == 0) {
       console.log("Inserting user id...");
       columnArray.push(1);
       const expirationDate = new Date(Date.now() + 3650 * 24 * 60 * 60 * 1000);
@@ -247,8 +254,11 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
         }
       });
 
+      console.log(combinedArray);
+      console.log(userID);
+
       connection.query(
-        "UPDATE producttables SET table1 = ? WHERE id = ?",
+        "UPDATE producttables SET table1 = $1 WHERE id = $2",
         [combinedArray, userID],
         (err, results) => {
           if (err) {
@@ -258,7 +268,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
       );
 
       connection.query(
-        "INSERT INTO tablenames (id) VALUES (?)",
+        "INSERT INTO tablenames (id) VALUES ($1)",
         [userID],
         () => {
           if (err) {
@@ -268,7 +278,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
       );
 
       connection.query(
-        "UPDATE tablenames SET name1 = ? WHERE id = ?",
+        "UPDATE tablenames SET name1 = $1 WHERE id = $2",
         [tableName, userID],
         (err, results) => {
           if (err) {
@@ -282,18 +292,21 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
         if (err) {
           console.log(err);
         }
-        const columnCount = results[0].column_count - 1;
+        const columnCount = parseInt(results.rows[0].count, 10) - 1;
+        console.log(columnCount);
+        
         let emptyColumn;
         let columnFound = false;
-        for (let i = 1; i < columnCount; i++) {
+        for (let i = 1; i <= columnCount; i++) {
           connection.query(
             `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NULL AND id = ${userID}`,
             (err, results) => {
               if (err) {
                 console.log("Empty error:", err);
               }
-              emptyColumn = results[0].empty_count;
 
+              emptyColumn = results.rows[0].empty_count;
+              
               if (emptyColumn > 0 && !columnFound) {
                 columnFound = true;
                 console.log("Empty column found:", i);
@@ -307,8 +320,10 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
                   expires: expirationDate,
                 });
 
+                console.log('Column array:', columnArray);
+
                 connection.query(
-                  `UPDATE producttables SET table${i} = ? WHERE id = ?`,
+                  `UPDATE producttables SET table${i} = $1 WHERE id = $2`,
                   [combinedArray, userID],
                   (err, results) => {
                     if (err) {
@@ -322,7 +337,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
                 );
 
                 connection.query(
-                  `UPDATE tablenames SET name${i} = ? WHERE id = ?`,
+                  `UPDATE tablenames SET name${i} = $1 WHERE id = $2`,
                   [tableName, userID],
                   (err, results) => {
                     if (err) {
@@ -341,33 +356,35 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
 
 app.post("/lists", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
-  const countEmptyColumnQuery = `SELECT COUNT(*) AS column_count FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '***REMOVED***' AND TABLE_NAME = 'producttables';`;
+  const countEmptyColumnQuery = `SELECT count(*) FROM information_schema.columns WHERE table_name = 'producttables' AND table_schema = 'public';`;
   let tableCount = 0;
 
   connection.query(countEmptyColumnQuery, (err, results) => {
     if (err) {
       console.log(err);
     }
-    const columnCount = results[0].column_count - 1;
+    const columnCount = parseInt(results.rows[0].count, 10) - 1;
 
     let emptyColumn;
     let completedQueries = 0;
-    for (let i = 1; i < columnCount; i++) {
+    console.log(columnCount)
+    for (let i = 1; i <= columnCount; i++) {
       connection.query(
-        `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NOT NULL AND id = ?`,
+        `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NOT NULL AND id = $1`,
         [userID],
         (err, results) => {
           if (err) {
             console.log("Empty error:", err);
           }
-          emptyColumn = results[0].empty_count;
+          emptyColumn = results.rows[0].empty_count;
+
           if (emptyColumn > 0) {
             tableCount++;
           }
 
           completedQueries++;
-
-          if (completedQueries === columnCount - 1) {
+          
+          if (completedQueries === columnCount) {
             res.json({ tableCount, insertColumn });
           }
         }
@@ -381,7 +398,7 @@ app.post("/remove-table", authUser.authenticateToken, (req, res) => {
   const tableNumber = req.body.tableNumber;
   try {
     connection.query(
-      `UPDATE producttables SET table${tableNumber} = NULL WHERE id = ?`,
+      `UPDATE producttables SET table${tableNumber} = NULL WHERE id = $1`,
       [userID],
       (err, results) => {
         if (err) {
@@ -401,13 +418,13 @@ app.post("/open-table", authUser.authenticateToken, (req, res) => {
 
   try {
     connection.query(
-      `SELECT table${tableNumber} FROM producttables WHERE id = ?`,
+      `SELECT table${tableNumber} FROM producttables WHERE id = $1`,
       [userID],
       (err, results) => {
         if (err) {
           console.log("Error extracting a column:", err);
         } else {
-          array = results[0]["table" + tableNumber.toString()];
+          array = results.rows[0]["table" + tableNumber.toString()];
         }
       }
     );
