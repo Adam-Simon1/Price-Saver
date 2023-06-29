@@ -83,48 +83,50 @@ fetch("/lists", { method: "POST" })
           const tableNumber = parseInt(tableId, 10);
           axios.post("/open-table", { tableNumber: tableNumber });
 
-          setTimeout(() => {
-            fetch("/send-array", { method: "POST" })
-              .then((response) => response.json())
-              .then((data) => {
-                const combinedArray = data.array;
-                const jsonString = combinedArray.substring(1, combinedArray.length - 1);
-                const obj = JSON.parse(jsonString);
-                
-                let itemArrayKauflandString;
-                let itemArrayTescoString;
-                let itemArrayTesco;
-                let itemArrayKaufland;
+          fetch("/send-array", { method: "POST" })
+            .then((response) => response.json())
+            .then((data) => {
+              const combinedArray = data.array;
+              console.log(combinedArray)
+              const jsonString = combinedArray.substring(
+                1,
+                combinedArray.length - 1
+              );
+              const obj = JSON.parse(jsonString);
 
-                if (obj.includes(":")) {
-                  itemArrayTescoString = obj.split(":")[0];
-                  itemArrayKauflandString = obj.split(":")[1];
-                  itemArrayTesco = JSON.parse(itemArrayTescoString);
-                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-                } else if (obj.includes("t")) {
-                  itemArrayTescoString = obj.replace("t", "");
-                  itemArrayTesco = JSON.parse(itemArrayTescoString);
-                } else if (obj.includes("k")) {
-                  itemArrayKauflandString = obj.replace("k", "");
-                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-                }
+              let itemArrayKauflandString;
+              let itemArrayTescoString;
+              let itemArrayTesco;
+              let itemArrayKaufland;
 
-                const key1 = "kaufland";
-                const key2 = "tesco";
+              if (obj.includes(":")) {
+                itemArrayTescoString = obj.split(":")[0];
+                itemArrayKauflandString = obj.split(":")[1];
+                itemArrayTesco = JSON.parse(itemArrayTescoString);
+                itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+              } else if (obj.includes("t")) {
+                itemArrayTescoString = obj.replace("t", "");
+                itemArrayTesco = JSON.parse(itemArrayTescoString);
+              } else if (obj.includes("k")) {
+                itemArrayKauflandString = obj.replace("k", "");
+                itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+              }
 
-                saveArrayLocally(itemArrayKaufland, key1);
-                saveArrayLocally(itemArrayTesco, key2);
+              const key1 = "kaufland";
+              const key2 = "tesco";
 
-                function saveArrayLocally(array, key) {
-                  localStorage.setItem(key, JSON.stringify(array));
-                }
+              saveArrayLocally(itemArrayKaufland, key1);
+              saveArrayLocally(itemArrayTesco, key2);
 
-                window.location.href = "/saved-tables";
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-              });
-          }, 100);
+              function saveArrayLocally(array, key) {
+                localStorage.setItem(key, JSON.stringify(array));
+              }
+
+              window.location.href = "/saved-tables";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
         });
       }
     }

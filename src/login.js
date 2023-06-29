@@ -158,9 +158,9 @@ app.post("/auth", (req, res) => {
   query = "SELECT * FROM accounts WHERE email = $1";
   if (email && password) {
     connection.query(query, [email], (err, results) => {
-      if (err){
+      if (err) {
         console.log(err);
-      };
+      }
 
       //console.log(results.rows[0].username);
       if (results.rows.length > 0) {
@@ -178,7 +178,7 @@ app.post("/auth", (req, res) => {
               email: email,
               username: results.rows[0].username,
             };
-            
+
             const token = jwt.sign(user, process.env.JWT_SECRET, {
               expiresIn: "24h",
             });
@@ -294,7 +294,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
         }
         const columnCount = parseInt(results.rows[0].count, 10) - 1;
         console.log(columnCount);
-        
+
         let emptyColumn;
         let columnFound = false;
         for (let i = 1; i <= columnCount; i++) {
@@ -306,7 +306,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
               }
 
               emptyColumn = results.rows[0].empty_count;
-              
+
               if (emptyColumn > 0 && !columnFound) {
                 columnFound = true;
                 console.log("Empty column found:", i);
@@ -320,7 +320,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
                   expires: expirationDate,
                 });
 
-                console.log('Column array:', columnArray);
+                console.log("Column array:", columnArray);
 
                 connection.query(
                   `UPDATE producttables SET table${i} = $1 WHERE id = $2`,
@@ -367,7 +367,7 @@ app.post("/lists", authUser.authenticateToken, (req, res) => {
 
     let emptyColumn;
     let completedQueries = 0;
-    console.log(columnCount)
+    console.log(columnCount);
     for (let i = 1; i <= columnCount; i++) {
       connection.query(
         `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NOT NULL AND id = $1`,
@@ -383,7 +383,7 @@ app.post("/lists", authUser.authenticateToken, (req, res) => {
           }
 
           completedQueries++;
-          
+
           if (completedQueries === columnCount) {
             res.json({ tableCount, insertColumn });
           }
@@ -415,20 +415,19 @@ let array;
 app.post("/open-table", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
   const tableNumber = req.body.tableNumber;
+  console.log(tableNumber)
 
-  try {
-    connection.query(
-      `SELECT table${tableNumber} FROM producttables WHERE id = $1`,
-      [userID],
-      (err, results) => {
-        if (err) {
-          console.log("Error extracting a column:", err);
-        } else {
-          array = results.rows[0]["table" + tableNumber.toString()];
-        }
+  connection.query(
+    `SELECT table${tableNumber} FROM producttables WHERE id = $1`,
+    [userID],
+    (err, results) => {
+      if (err) {
+        console.log("Error extracting a column:", err);
+      } else {
+        array = results.rows[0]["table" + tableNumber.toString()];
       }
-    );
-  } catch (error) {}
+    }
+  );
 });
 
 app.post("/send-array", authUser.authenticateToken, (req, res) => {
