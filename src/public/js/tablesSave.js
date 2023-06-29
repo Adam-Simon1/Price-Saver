@@ -1,46 +1,53 @@
-document.addEventListener("DOMContentLoaded", () => {
-  location.reload();
-  fetch("/lists", { method: "POST" })
-    .then((response) => response.text())
-    .then((data) => {
-      const tableCount = JSON.parse(data).tableCount;
-      const insertColumn = JSON.parse(data).insertColumn;
+(function () {
+  if (window.localStorage) {
+    if (!localStorage.getItem("firstLoad")) {
+      localStorage["firstLoad"] = true;
+      window.location.reload();
+    } else localStorage.removeItem("firstLoad");
+  }
+})();
 
-      const div = document.getElementById("tables");
-      const tableContainer = document.querySelectorAll(".table-container");
+fetch("/lists", { method: "POST" })
+  .then((response) => response.text())
+  .then((data) => {
+    const tableCount = JSON.parse(data).tableCount;
+    const insertColumn = JSON.parse(data).insertColumn;
 
-      const arrayCookie = Cookies.get("idCookie");
-      let idArray;
+    const div = document.getElementById("tables");
+    const tableContainer = document.querySelectorAll(".table-container");
 
-      let indexCounter = 0;
-      try {
-        idArray = JSON.parse(arrayCookie);
-      } catch (error) {
-        idArray = [];
-      }
+    const arrayCookie = Cookies.get("idCookie");
+    let idArray;
 
-      if (tableCount == 0) {
-        const icon = document.getElementById("icon");
-        const emptyDiv = document.createElement("div");
-        const btnContainer = document.createElement("div");
-        btnContainer.classList.add("start-btn");
-        const btn = document.createElement("button");
-        btn.classList.add("btn");
-        btn.textContent = "Create your first shopping list";
-        btnContainer.appendChild(btn);
-        emptyDiv.classList.add("empty-div");
-        const h1 = document.createElement("h1");
-        h1.textContent = "You don't have any shopping lists saved, yet.";
-        emptyDiv.appendChild(h1);
-        emptyDiv.appendChild(btnContainer);
-        div.appendChild(emptyDiv);
+    let indexCounter = 0;
+    try {
+      idArray = JSON.parse(arrayCookie);
+    } catch (error) {
+      idArray = [];
+    }
 
-        btn.addEventListener("click", () => {
-          window.location.href = "/search";
-        });
-      } else {
-        for (let i = 1; i < tableCount + 1; i++) {
-          const svgPath = `
+    if (tableCount == 0) {
+      const icon = document.getElementById("icon");
+      const emptyDiv = document.createElement("div");
+      const btnContainer = document.createElement("div");
+      btnContainer.classList.add("start-btn");
+      const btn = document.createElement("button");
+      btn.classList.add("btn");
+      btn.textContent = "Create your first shopping list";
+      btnContainer.appendChild(btn);
+      emptyDiv.classList.add("empty-div");
+      const h1 = document.createElement("h1");
+      h1.textContent = "You don't have any shopping lists saved, yet.";
+      emptyDiv.appendChild(h1);
+      emptyDiv.appendChild(btnContainer);
+      div.appendChild(emptyDiv);
+
+      btn.addEventListener("click", () => {
+        window.location.href = "/search";
+      });
+    } else {
+      for (let i = 1; i < tableCount + 1; i++) {
+        const svgPath = `
         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
           <path d="M4 7l16 0" />
@@ -50,93 +57,101 @@ document.addEventListener("DOMContentLoaded", () => {
           <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
         </svg>`;
 
-          const iconDiv = document.createElement("div");
-          iconDiv.classList.add("icon-container");
-          const h1Div = document.createElement("div");
-          const h1 = document.createElement("h1");
-          h1.classList.add("table-h1");
-          iconDiv.innerHTML += svgPath;
-          h1Div.classList.add("table-container");
-          h1Div.setAttribute("id", idArray[indexCounter]);
-          h1.textContent = `Table${i}`;
-          h1Div.appendChild(h1);
-          h1Div.appendChild(iconDiv);
-          div.appendChild(h1Div);
-          indexCounter++;
+        const iconDiv = document.createElement("div");
+        iconDiv.classList.add("icon-container");
+        const h1Div = document.createElement("div");
+        const h1 = document.createElement("h1");
+        h1.classList.add("table-h1");
+        iconDiv.innerHTML += svgPath;
+        h1Div.classList.add("table-container");
+        h1Div.setAttribute("id", idArray[indexCounter]);
+        h1.textContent = `Table${i}`;
+        h1Div.appendChild(h1);
+        h1Div.appendChild(iconDiv);
+        div.appendChild(h1Div);
+        indexCounter++;
 
-          iconDiv.addEventListener("click", () => {
-            const confirmed = window.confirm(
-              "Are you sure you want to remove this?"
-            );
+        iconDiv.addEventListener("click", () => {
+          const confirmed = window.confirm(
+            "Are you sure you want to remove this?"
+          );
 
-            if (confirmed) {
-              const tableId = h1Div.getAttribute("id");
-              const tableNumber = parseInt(tableId, 10);
-              axios.post("/remove-table", { tableNumber: tableNumber });
-
-              idArray = idArray.filter((item) => item !== tableNumber);
-              Cookies.set("idCookie", JSON.stringify(idArray), {
-                expires: 3650,
-              });
-              location.reload();
-            } else {
-            }
-          });
-
-          h1.addEventListener("click", () => {
+          if (confirmed) {
             const tableId = h1Div.getAttribute("id");
             const tableNumber = parseInt(tableId, 10);
-            axios.post("/open-table", { tableNumber: tableNumber });
+            axios.post("/remove-table", { tableNumber: tableNumber });
 
-            fetch("/send-array", { method: "POST" })
-              .then((response) => response.json())
-              .then((data) => {
-                const combinedArray = data.array;
-                console.log(combinedArray);
-                const jsonString = combinedArray.substring(
-                  1,
-                  combinedArray.length - 1
-                );
-                const obj = JSON.parse(jsonString);
+            idArray = idArray.filter((item) => item !== tableNumber);
+            Cookies.set("idCookie", JSON.stringify(idArray), {
+              expires: 3650,
+            });
 
-                let itemArrayKauflandString;
-                let itemArrayTescoString;
-                let itemArrayTesco;
-                let itemArrayKaufland;
+            function reload() {
+              if (window.localStorage) {
+                if (!localStorage.getItem("firstLoadRemove")) {
+                  localStorage["firstLoadRemove"] = true;
+                  window.location.reload();
+                } else localStorage.removeItem("firstLoadRemove");
+              }
+            }
+            reload();
+          } else {
+          }
+        });
 
-                if (obj.includes(":")) {
-                  itemArrayTescoString = obj.split(":")[0];
-                  itemArrayKauflandString = obj.split(":")[1];
-                  itemArrayTesco = JSON.parse(itemArrayTescoString);
-                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-                } else if (obj.includes("t")) {
-                  itemArrayTescoString = obj.replace("t", "");
-                  itemArrayTesco = JSON.parse(itemArrayTescoString);
-                } else if (obj.includes("k")) {
-                  itemArrayKauflandString = obj.replace("k", "");
-                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-                }
+        h1.addEventListener("click", () => {
+          const tableId = h1Div.getAttribute("id");
+          const tableNumber = parseInt(tableId, 10);
+          axios.post("/open-table", { tableNumber: tableNumber });
 
-                const key1 = "kaufland";
-                const key2 = "tesco";
+          fetch("/send-array", { method: "POST" })
+            .then((response) => response.json())
+            .then((data) => {
+              const combinedArray = data.array;
+              console.log(combinedArray);
+              const jsonString = combinedArray.substring(
+                1,
+                combinedArray.length - 1
+              );
+              const obj = JSON.parse(jsonString);
 
-                saveArrayLocally(itemArrayKaufland, key1);
-                saveArrayLocally(itemArrayTesco, key2);
+              let itemArrayKauflandString;
+              let itemArrayTescoString;
+              let itemArrayTesco;
+              let itemArrayKaufland;
 
-                function saveArrayLocally(array, key) {
-                  localStorage.setItem(key, JSON.stringify(array));
-                }
+              if (obj.includes(":")) {
+                itemArrayTescoString = obj.split(":")[0];
+                itemArrayKauflandString = obj.split(":")[1];
+                itemArrayTesco = JSON.parse(itemArrayTescoString);
+                itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+              } else if (obj.includes("t")) {
+                itemArrayTescoString = obj.replace("t", "");
+                itemArrayTesco = JSON.parse(itemArrayTescoString);
+              } else if (obj.includes("k")) {
+                itemArrayKauflandString = obj.replace("k", "");
+                itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+              }
 
-                window.location.href = "/saved-tables";
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-              });
-          });
-        }
+              const key1 = "kaufland";
+              const key2 = "tesco";
+
+              saveArrayLocally(itemArrayKaufland, key1);
+              saveArrayLocally(itemArrayTesco, key2);
+
+              function saveArrayLocally(array, key) {
+                localStorage.setItem(key, JSON.stringify(array));
+              }
+
+              window.location.href = "/saved-tables";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
       }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-});
+    }
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
