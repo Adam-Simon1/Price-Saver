@@ -456,6 +456,30 @@ app.post("/remove-table", authUser.authenticateToken, (req, res) => {
         }
       }
     );
+
+    connection.query(
+      "SELECT idarray FROM elementid WHERE id = $1",
+      [userID],
+      (err, results) => {
+        const idJson = results.rows[0].idarray;
+        let idArray = JSON.parse(idJson);
+        idArray = idArray.filter(
+          (element) => element !== JSON.parse(tableNumber)
+        );
+        console.log(idArray);
+        const idArrayStringified = JSON.stringify(idArray);
+
+        connection.query(
+          "UPDATE elementid SET idarray = $1 WHERE id = $2",
+          [idArrayStringified, userID],
+          (err, results) => {
+            if (err) {
+              console.log("Error inserting modified array:", err);
+            }
+          }
+        );
+      }
+    );
   } catch (error) {}
 });
 

@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 expires: 3650,
               });
             } else {
-              // User cancelled the removal
+              
             }
           });
 
