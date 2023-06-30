@@ -1,13 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  (function () {
-    if (window.localStorage) {
-      if (!localStorage.getItem("firstLoad1")) {
-        localStorage["firstLoad1"] = true;
-        document.location.reload();
-      } else localStorage.removeItem("firstLoad1");
-    }
-  })();
-
   fetch("/lists", { method: "POST" })
     .then((response) => response.text())
     .then((data) => {
@@ -49,14 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         for (let i = 1; i < tableCount + 1; i++) {
           const svgPath = `
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <path d="M4 7l16 0" />
-          <path d="M10 11l0 6" />
-          <path d="M14 11l0 6" />
-          <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
-          <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
-        </svg>`;
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="48" height="48" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M4 7l16 0" />
+            <path d="M10 11l0 6" />
+            <path d="M14 11l0 6" />
+            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+          </svg>`;
 
           const iconDiv = document.createElement("div");
           iconDiv.classList.add("icon-container");
@@ -73,9 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
           indexCounter++;
 
           iconDiv.addEventListener("click", () => {
-            const confirmed = window.confirm(
-              "Are you sure you want to remove this?"
-            );
+            const confirmed = window.confirm("Are you sure you want to remove this?");
 
             if (confirmed) {
               const tableId = h1Div.getAttribute("id");
@@ -86,16 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
               Cookies.set("idCookie", JSON.stringify(idArray), {
                 expires: 3650,
               });
-
-              (function () {
-                if (window.localStorage) {
-                  if (!localStorage.getItem("firstLoad2")) {
-                    localStorage["firstLoad2"] = true;
-                    window.location.reload();
-                  } else localStorage.removeItem("firstLoad2");
-                }
-              })();
             } else {
+              // User cancelled the removal
             }
           });
 
@@ -109,10 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
               .then((data) => {
                 const combinedArray = data.array;
                 console.log(combinedArray);
-                const jsonString = combinedArray.substring(
-                  1,
-                  combinedArray.length - 1
-                );
+                const jsonString = combinedArray.substring(1, combinedArray.length - 1);
                 const obj = JSON.parse(jsonString);
 
                 let itemArrayKauflandString;
@@ -136,14 +114,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const key1 = "kaufland";
                 const key2 = "tesco";
 
-                saveArrayLocally(itemArrayKaufland, key1);
-                saveArrayLocally(itemArrayTesco, key2);
+                saveArrayLocally(itemArrayKaufland, key1, tableNumber);
+                saveArrayLocally(itemArrayTesco, key2, tableNumber);
 
-                function saveArrayLocally(array, key) {
-                  localStorage.setItem(key, JSON.stringify(array));
+                function saveArrayLocally(array, key, tableNumber) {
+                  localStorage.setItem(`${key}_${tableNumber}`, JSON.stringify(array));
                 }
 
-                window.location.href = "/saved-tables";
+                window.location.href = `/saved-tables?tableNumber=${tableNumber}`;
               })
               .catch((error) => {
                 console.error("Error:", error);
