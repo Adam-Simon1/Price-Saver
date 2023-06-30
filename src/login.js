@@ -215,6 +215,24 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
   let serializedKaufland;
   let combinedArray;
 
+  if (columnArray.length == 0) {
+    connection.query(
+      "SELECT idarray FROM elementid WHERE id = $1",
+      [userID],
+      (err, results) => {
+        if (err) {
+          console.log("Error selecting id array:", err);
+        } else {
+          if (results.rows.length > 0) {
+            const idArray = JSON.parse(results.rows[0].idarray);
+            console.log(idArray);
+            columnArray = idArray;
+          }
+        }
+      }
+    );
+  }
+
   if (arrayDataTesco && arrayDataKaufland) {
     serializedTesco = JSON.stringify(arrayDataTesco);
     serializedKaufland = JSON.stringify(arrayDataKaufland);
@@ -232,6 +250,8 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
   const userIdExistQuery = "SELECT * FROM producttables WHERE id = $1";
   const insertUserIdQuery = "INSERT INTO producttables (id) VALUES ($1)";
   const countEmptyColumnQuery = `SELECT count(*) FROM information_schema.columns WHERE table_name = 'producttables' AND table_schema = 'public';`;
+  const elementIdQuery = "UPDATE elementid SET idarray = $1 WHERE id = $2";
+  const userIdQuery = "INSERT INTO elementid (id, idarray) VALUES ($1, $2)";
 
   connection.query(userIdExistQuery, [userID], (err, results) => {
     if (err) {
@@ -243,10 +263,17 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
     if (results.rows.length == 0) {
       console.log("Inserting user id...");
       columnArray.push(1);
-      const expirationDate = new Date(Date.now() + 3650 * 24 * 60 * 60 * 1000);
-      res.cookie("idCookie", JSON.stringify(columnArray), {
-        expires: expirationDate,
-      });
+      columnArrayString = JSON.stringify(columnArray);
+
+      connection.query(
+        userIdQuery,
+        [userID, columnArrayString],
+        (err, results) => {
+          if (err) {
+            console.log("Error inserting element id:", err);
+          }
+        }
+      );
 
       connection.query(insertUserIdQuery, [userID], (err, results) => {
         if (err) {
@@ -293,7 +320,7 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
           console.log(err);
         }
         const columnCount = parseInt(results.rows[0].count, 10) - 1;
-        console.log(columnCount);
+        console.log("columnCount:", columnCount);
 
         let emptyColumn;
         let columnFound = false;
@@ -312,13 +339,17 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
                 console.log("Empty column found:", i);
                 insertColumn = i;
                 columnArray.push(insertColumn);
+                columnArrayString = JSON.stringify(columnArray);
 
-                const expirationDate = new Date(
-                  Date.now() + 3650 * 24 * 60 * 60 * 1000
+                connection.query(
+                  elementIdQuery,
+                  [columnArrayString, userID],
+                  (err, results) => {
+                    if (err) {
+                      console.log("Error inserting element id:", err);
+                    }
+                  }
                 );
-                res.cookie("idCookie", JSON.stringify(columnArray), {
-                  expires: expirationDate,
-                });
 
                 console.log("Column array:", columnArray);
 
@@ -357,7 +388,24 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
 app.post("/lists", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
   const countEmptyColumnQuery = `SELECT count(*) FROM information_schema.columns WHERE table_name = 'producttables' AND table_schema = 'public';`;
+  const elementIdExtractQuery = "SELECT idarray FROM elementid WHERE id = $1";
   let tableCount = 0;
+
+  connection.query(elementIdExtractQuery, [userID], (err, results) => {
+    if (err) {
+      console.log("Error extracting id array:", err);
+    } else {
+      if (results.rows.length > 0) {
+        const idArray = results.rows[0].idarray;
+        const currentDate = new Date();
+        const futureDate = new Date(
+          currentDate.getTime() + 3650 * 24 * 60 * 60 * 1000
+        );
+
+        res.cookie("idCookie", idArray, { expires: futureDate });
+      }
+    }
+  });
 
   connection.query(countEmptyColumnQuery, (err, results) => {
     if (err) {
@@ -415,7 +463,7 @@ let array;
 app.post("/open-table", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
   const tableNumber = req.body.tableNumber;
-  console.log(tableNumber)
+  console.log(tableNumber);
 
   connection.query(
     `SELECT table${tableNumber} FROM producttables WHERE id = $1`,
