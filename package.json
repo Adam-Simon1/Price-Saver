@@ -31,9 +31,7 @@
     "path": "^0.12.7",
     "pg": "^8.11.1",
     "puppeteer": "^20.4.0",
-    "socket.io": "^4.6.2",
-    "swup": "^3.1.0",
-    "websocket": "^1.0.34"
+    "swup": "^3.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.14.9",
