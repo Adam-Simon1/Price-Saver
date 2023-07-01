@@ -8,6 +8,11 @@
     src: url('../fonts/Quicksand-Bold.ttf');
 }
 
+html{
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 body{
     font-family: quicksand;
     background-color: #e7ecea;

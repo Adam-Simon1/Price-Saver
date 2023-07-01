@@ -7,6 +7,11 @@
     src: url('../fonts/Quicksand-Regular.ttf');
 }
 
+html{
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 body{
     font-family: quicksand;
     background-color: #e7ecea;
@@ -275,5 +280,18 @@ table td {
 
     .quantity-container{
         padding-left: 3rem;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    table th{
+        font-size: 0.9rem;
+        padding: 0.4rem 1rem;
+        padding-right: 0.9rem;
+    }
+
+    table td{
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
     }
 }

@@ -2,7 +2,7 @@
   "name": "sale-tracker-v2",
   "version": "1.0.0",
   "description": "",
-  "main": "login.js",
+  "main": "./src/login.js",
   "engines": {
     "node": "18.x"
   },

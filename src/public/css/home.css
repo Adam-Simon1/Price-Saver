@@ -8,6 +8,11 @@
     src: url('../fonts/Quicksand-Bold.ttf');
 }
 
+html{
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 body{
     font-family: quicksand;
     background-color: #e7ecea;
@@ -309,11 +314,11 @@ body{
 
 @media only screen and (max-width: 405px) {
     .welcome{
-        font-size: 1.8rem;
+        font-size: 1.7rem;
     }
 
     .price-savvy{
-        font-size: 1.9rem;
+        font-size: 1.8rem;
     }
 
     .table{

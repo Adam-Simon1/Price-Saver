@@ -8,6 +8,11 @@ font-family: 'quicksand_bold';
 src: url('../fonts/Quicksand-Bold.ttf');
 }
 
+html{
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 body{
     font-family: quicksand;
     background-color: #e7ecea;
@@ -384,5 +389,13 @@ body{
 
     .next-container h2{
         font-size: 1.4rem;
+    }
+
+    .apply_changes{
+        width: 11rem;
+    }
+
+    .reset{
+        width: 11rem;
     }
 }

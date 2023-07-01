@@ -17,6 +17,11 @@ body{
     align-items: center;  
 }
 
+html{
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
 .navigation {
     grid-row: 1/2;
     grid-column: 1/4;
