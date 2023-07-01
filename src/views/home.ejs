@@ -33,12 +33,17 @@
           />
         </svg>
         <a class="link_github" href="https://github.com/Adam-Simon1/Price-Saver"
-          >Open my repository</a
+          >Open my Repository</a
         >
       </div>
 
       <div class="shopping-lists-container">
-        <button class="shopping-lists-btn" name="listbtn" id="listbtn" onclick="openLink5()">
+        <button
+          class="shopping-lists-btn"
+          name="listbtn"
+          id="listbtn"
+          onclick="openLink5()"
+        >
           Shopping Lists
         </button>
       </div>
@@ -73,6 +78,60 @@
           </div>
         </div>
       </div>
+    </nav>
+
+    <div class="menu-btn-container">
+      <button class="menu-btn" id="menu-btn">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-menu-2"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="#000000"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M4 6l16 0" />
+          <path d="M4 12l16 0" />
+          <path d="M4 18l16 0" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="menu" id="menu">
+      <ul>
+        <li><button onclick="openLink6()">Github Repository</button></li>
+        <li>
+          <button id="listbtn" onclick="openLink5()">Shopping Lists</button>
+        </li>
+        <li>
+          <button class="last" id="sign-out">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="icon-logout"
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#000000"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"
+              />
+              <path d="M9 12h12l-3 -3" />
+              <path d="M18 15l3 -3" />
+            </svg>
+          </button>
+        </li>
+      </ul>
     </nav>
 
     <div class="main">
@@ -121,10 +180,26 @@
 
     <script>
       const listBtn = document.getElementById("listbtn");
+      const signOut = document.getElementById("sign-out");
+      const menuBtn = document.getElementById("menu-btn");
+      const menu = document.getElementById("menu");
 
       listBtn.addEventListener("click", () => {
         console.log("pressed");
-        axios.post('/lists', {}).catch(err);
+        axios.post("/lists", {}).catch(err);
+      });
+
+      signOut.addEventListener("click", () => {
+        window.location.href = "/";
+        Cookies.remove("token");
+      });
+
+      menuBtn.addEventListener("click", () => {
+        if (menu.style.display === "flex") {
+          menu.style.display = "none"; 
+        } else {
+          menu.style.display = "flex";
+        }
       });
     </script>
   </body>

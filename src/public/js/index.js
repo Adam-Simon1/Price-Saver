@@ -18,6 +18,10 @@ function openLink5() {
   window.location.href = "/shopping-lists";
 }
 
+function openLink6() {
+  window.location.href = "https://github.com/Adam-Simon1/Price-Saver"
+}
+
 const loginForm = document.getElementById("login-form");
 
 loginForm.addEventListener("submit", (event) => {
