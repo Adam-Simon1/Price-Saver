@@ -110,6 +110,8 @@ body{
 
 .price-savvy{
     font-family: quicksand_bold;
+    display: flex;
+    align-items: center;
 }
 
 .start{

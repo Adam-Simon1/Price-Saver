@@ -11,5 +11,15 @@
       "src": "/(.*)",
       "dest": "src/login.js"
     }
+  ],
+  "crons":[
+    {
+      "path": "/src/public/js/script_kaufland.js",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/src/public/js/script_tesco.js",
+      "schedule": "0 * * * *"
+    }
   ]
 }

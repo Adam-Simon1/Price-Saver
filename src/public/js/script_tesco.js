@@ -2,7 +2,13 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 
-(async () => {
+fs.writeFileSync("src\\csv\\results_tesco.csv", "", (err) => {
+  if (err) {
+    console.log(err);
+  }
+});
+
+const appTesco = (async () => {
 
   // Browser setup
   const browser = await puppeteer.launch({
@@ -84,3 +90,5 @@ const fs = require("fs");
   // Closing website
   await browser.close();
 })();
+
+module.exports = appTesco;
