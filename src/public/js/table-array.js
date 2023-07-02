@@ -1,5 +1,3 @@
-import { lastItem } from "./home.js";
-
 document.addEventListener("DOMContentLoaded", function () {
   const textArea = document.getElementById("list-field");
   const suggestionsContainer = document.querySelector(
@@ -26,6 +24,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const dataArray = parseCSVData(data);
 
       suggestionsContainer.addEventListener("click", function (event) {
+        const newestText = textArea.value;
+        const lines = newestText.split("\n");
+        const lastItem = lines[lines.length - 1];
         setTimeout(function () {
           if (dataArray.includes(lastItem)) {
             const textareaValueC = textArea.value;

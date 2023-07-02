@@ -1,5 +1,3 @@
-let lastItem;
-
 // Starts after the html document is completely loaded and ready to go
 document.addEventListener("DOMContentLoaded", function () {
   // Importing all the elements
@@ -244,4 +242,3 @@ document.addEventListener("DOMContentLoaded", function () {
     return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 });
-export { lastItem };
