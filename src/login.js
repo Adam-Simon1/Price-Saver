@@ -508,4 +508,4 @@ app.post("/send-array", authUser.authenticateToken, (req, res) => {
 
 app.listen(process.env.PORT || 3000);
 
-module.exports = app;
+exports.app = app;
