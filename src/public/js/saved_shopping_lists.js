@@ -1,29 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
-  
   const urlParams = new URLSearchParams(window.location.search);
   const tableNumber = urlParams.get("tableNumber");
 
   let itemArrayKaufland = JSON.parse(
     localStorage.getItem(`kaufland_${tableNumber}`)
   );
-  let itemArrayTesco = JSON.parse(
-    localStorage.getItem(`tesco_${tableNumber}`)
-  );
+  let itemArrayTesco = JSON.parse(localStorage.getItem(`tesco_${tableNumber}`));
 
   const tableButton = document.getElementById("tablebtn");
 
-  function tableTesco() {
-    itemArrayTesco = [...new Set(itemArrayTesco)];
+  function createTable(array, tableName, tableNameDivId, tableDivId) {
+    array = [...new Set(array)];
 
-    itemArrayTesco = itemArrayTesco.filter((element) => element !== "");
+    array = array.filter((element) => element !== "");
 
-    const h1Div = document.getElementById("h1-kaufland");
+    const h1Div = document.getElementById(tableNameDivId);
     let h1 = h1Div.querySelector("h1");
 
     if (!h1) {
       h1 = document.createElement("h1");
       h1.classList.add("table-name");
-      const h1Text = document.createTextNode("Tesco");
+      const h1Text = document.createTextNode(tableName);
       h1.appendChild(h1Text);
       h1Div.appendChild(h1);
     }
@@ -61,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     tableHeader.appendChild(headerRow);
     table.appendChild(tableHeader);
 
-    itemArrayTesco.forEach((item) => {
+    array.forEach((item) => {
       const [name, price] = item.split(" ; ");
 
       const tableRow = document.createElement("tr");
@@ -97,97 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     table.appendChild(tableBody);
 
-    const tableContainer = document.getElementById("table-container");
-    tableContainer.innerHTML = "";
-    tableContainer.appendChild(table);
-  }
-
-  function tableKaufland() {
-    itemArrayKaufland = [...new Set(itemArrayKaufland)];
-
-    itemArrayKaufland = itemArrayKaufland.filter((element) => element !== "");
-
-    const h1Div = document.getElementById("h1-tesco");
-    let h1 = h1Div.querySelector("h1");
-
-    if (!h1) {
-      h1 = document.createElement("h1");
-      h1.classList.add("table-name");
-      const h1Text = document.createTextNode("Kaufland");
-      h1.appendChild(h1Text);
-      h1Div.appendChild(h1);
-    }
-
-    const table = document.createElement("table");
-    const tableBody = document.createElement("tbody");
-
-    const tableHeader = document.createElement("thead");
-    const headerRow = document.createElement("tr");
-
-    const productHeader = document.createElement("th");
-    productHeader.classList.add("product_header");
-    const productHeaderText = document.createTextNode("Product");
-    productHeader.appendChild(productHeaderText);
-    headerRow.appendChild(productHeader);
-
-    const priceHeader = document.createElement("th");
-    priceHeader.classList.add("price_header");
-    const priceHeaderText = document.createTextNode("Price");
-    priceHeader.appendChild(priceHeaderText);
-    headerRow.appendChild(priceHeader);
-
-    const quantityHeader = document.createElement("th");
-    quantityHeader.classList.add("quantity_header");
-    const quantityHeaderText = document.createTextNode("Quantity");
-    quantityHeader.appendChild(quantityHeaderText);
-    headerRow.appendChild(quantityHeader);
-
-    const totalPriceHeader = document.createElement("th");
-    totalPriceHeader.classList.add("total_price_header");
-    const totalPriceHeaderText = document.createTextNode("Total Price");
-    totalPriceHeader.appendChild(totalPriceHeaderText);
-    headerRow.appendChild(totalPriceHeader);
-
-    tableHeader.appendChild(headerRow);
-    table.appendChild(tableHeader);
-
-    itemArrayKaufland.forEach((item) => {
-      const [name, price] = item.split(" ; ");
-
-      const tableRow = document.createElement("tr");
-
-      const nameCell = document.createElement("td");
-      const nameText = document.createTextNode(name);
-      nameCell.appendChild(nameText);
-      tableRow.appendChild(nameCell);
-
-      const priceCell = document.createElement("td");
-      priceCell.classList.add("price_cell");
-      const priceText = document.createTextNode(price + " €");
-      priceCell.appendChild(priceText);
-      tableRow.appendChild(priceCell);
-
-      const quantityCell = document.createElement("td");
-      quantityCell.classList.add("quantity-container");
-      const quantityInput = document.createElement("input");
-      quantityInput.classList.add("quantity-input");
-
-      quantityCell.type = "text";
-      quantityCell.name = "quantity";
-
-      quantityCell.appendChild(quantityInput);
-      tableRow.appendChild(quantityCell);
-
-      const totalPriceCell = document.createElement("td");
-      totalPriceCell.classList.add("total-price-cell");
-      tableRow.appendChild(totalPriceCell);
-
-      tableBody.appendChild(tableRow);
-    });
-
-    table.appendChild(tableBody);
-
-    const tableContainer = document.getElementById("table-container2");
+    const tableContainer = document.getElementById(tableDivId);
     tableContainer.innerHTML = "";
     tableContainer.appendChild(table);
   }
@@ -284,10 +191,15 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log(itemArrayKaufland, itemArrayTesco);
 
     if (itemArrayKaufland.length > 0) {
-      tableKaufland();
+      createTable(
+        itemArrayKaufland,
+        "Kaufland",
+        "h1-kaufland",
+        "table-container"
+      );
     }
     if (itemArrayTesco.length > 0) {
-      tableTesco();
+      createTable(itemArrayTesco, "Tesco", "h1-tesco", "table-container2");
     }
 
     EventListenersToQuantityInputs();

@@ -38,6 +38,7 @@ body{
     grid-column: 2 / 3;
     justify-self: center;
     align-self: self-start;
+    z-index: 5;
 }
 
 .autocomplete .autocomplete-suggestions {

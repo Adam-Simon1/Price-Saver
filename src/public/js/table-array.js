@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             itemArrayTesco.push(lastItem);
 
-            Cookies.set("tescoCookie", itemArrayTesco.toString(), {
+            Cookies.set("tescoCookie", JSON.stringify(itemArrayTesco), {
               expires: 1,
             });
           }
@@ -56,28 +56,18 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         }, 100);
 
-        Cookies.set("tescoCookie", itemArrayTesco, { expires: 1 });
+        Cookies.set("tescoCookie", JSON.stringify(itemArrayTesco), {
+          expires: 1,
+        });
       });
 
-      const tescoCookie = Cookies.get("tescoCookie");
-      itemArrayTesco.push(tescoCookie);
+      const tescoCookieString = Cookies.get("tescoCookie");
+      const tescoCookie = JSON.parse(tescoCookieString);
+      console.log(tescoCookie);
+      itemArrayTesco = tescoCookie;
 
-      itemArrayTesco = itemArrayTesco[0].substring(1).split(",");
-      itemArrayTesco = itemArrayTesco.map((item) => item.trim());
-
-      let joinedArray = [];
-      for (let i = 0; i < itemArrayTesco.length; i += 2) {
-        if (itemArrayTesco[i + 1]) {
-          const joinedString = itemArrayTesco[i] + "," + itemArrayTesco[i + 1];
-          joinedArray.push(joinedString);
-        } else {
-          joinedArray.push(itemArrayTesco[i]);
-        }
-      }
-
-      itemArrayTesco = joinedArray;
+      itemArrayTesco = itemArrayTesco.filter((element) => element !== "");
     })
-
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
@@ -89,6 +79,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const dataArray = parseCSVData(data);
 
       suggestionsContainer.addEventListener("click", function (event) {
+        const newestText = textArea.value;
+        const lines = newestText.split("\n");
+        const lastItem = lines[lines.length - 1];
+
         setTimeout(function () {
           if (dataArray.includes(lastItem)) {
             const textareaValueC = textArea.value;
@@ -97,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function () {
             });
             itemArrayKaufland.push(lastItem);
 
-            Cookies.set("kauflandCookie", itemArrayKaufland.toString(), {
+            Cookies.set("kauflandCookie", JSON.stringify(itemArrayKaufland), {
               expires: 1,
             });
           }
@@ -105,6 +99,10 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       returnButton.addEventListener("click", function (event) {
+        const newestText = textArea.value;
+        const lines = newestText.split("\n");
+        const lastItem = lines[lines.length - 1];
+
         itemArrayKaufland.splice(itemArrayKaufland.indexOf(lastItem, 1));
 
         setTimeout(() => {
@@ -114,32 +112,18 @@ document.addEventListener("DOMContentLoaded", function () {
           });
         }, 100);
 
-        Cookies.set("kauflandCookie", itemArrayKaufland.toString(), {
+        Cookies.set("kauflandCookie", JSON.stringify(itemArrayKaufland), {
           expires: 1,
         });
       });
 
-      const kauflandCookie = Cookies.get("kauflandCookie");
+      const kauflandCookieString = Cookies.get("kauflandCookie");
+      const kauflandCookie = JSON.parse(kauflandCookieString);
 
-      itemArrayKaufland.push(kauflandCookie);
+      itemArrayKaufland = kauflandCookie;
 
-      itemArrayKaufland = itemArrayKaufland[0].substring(1).split(",");
-      itemArrayKaufland = itemArrayKaufland.map((item) => item.trim());
-
-      let joinedArray = [];
-      for (let i = 0; i < itemArrayKaufland.length; i += 2) {
-        if (itemArrayKaufland[i + 1]) {
-          const joinedString =
-            itemArrayKaufland[i] + "," + itemArrayKaufland[i + 1];
-          joinedArray.push(joinedString);
-        } else {
-          joinedArray.push(itemArrayKaufland[i]);
-        }
-      }
-
-      itemArrayKaufland = joinedArray;
+      itemArrayKaufland = itemArrayKaufland.filter((element) => element !== "");
     })
-
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
