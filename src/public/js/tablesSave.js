@@ -64,7 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
           indexCounter++;
 
           iconDiv.addEventListener("click", () => {
-            const confirmed = window.confirm("Are you sure you want to remove this?");
+            const confirmed = window.confirm(
+              "Are you sure you want to remove this?"
+            );
 
             if (confirmed) {
               const tableId = h1Div.getAttribute("id");
@@ -76,21 +78,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 expires: 3650,
               });
             } else {
-              
             }
           });
 
           h1.addEventListener("click", () => {
             const tableId = h1Div.getAttribute("id");
             const tableNumber = parseInt(tableId, 10);
-            axios.post("/open-table", { tableNumber: tableNumber });
 
+            axios
+              .post("/open-table", { tableNumber: tableNumber })
+              .then((response) => {
+                console.log("Data sent successfully");
+              })
+              .catch((err) => {});
+
+            const startTime = performance.now();
             fetch("/send-array", { method: "POST" })
               .then((response) => response.json())
               .then((data) => {
                 const combinedArray = data.array;
                 console.log(combinedArray);
-                const jsonString = combinedArray.substring(1, combinedArray.length - 1);
+                const jsonString = combinedArray.substring(
+                  1,
+                  combinedArray.length - 1
+                );
                 const obj = JSON.parse(jsonString);
 
                 let itemArrayKauflandString;
@@ -118,10 +129,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 saveArrayLocally(itemArrayTesco, key2, tableNumber);
 
                 function saveArrayLocally(array, key, tableNumber) {
-                  localStorage.setItem(`${key}_${tableNumber}`, JSON.stringify(array));
+                  localStorage.setItem(
+                    `${key}_${tableNumber}`,
+                    JSON.stringify(array)
+                  );
                 }
 
                 window.location.href = `/saved-tables?tableNumber=${tableNumber}`;
+                const endTime = performance.now();
+                const totalTime = endTime - startTime;
+                console.log(`Request duration: ${totalTime} milliseconds`);
               })
               .catch((error) => {
                 console.error("Error:", error);

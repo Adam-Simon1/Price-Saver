@@ -483,11 +483,9 @@ app.post("/remove-table", authUser.authenticateToken, (req, res) => {
   } catch (error) {}
 });
 
-let array;
 app.post("/open-table", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
   const tableNumber = req.body.tableNumber;
-  console.log(tableNumber);
 
   connection.query(
     `SELECT table${tableNumber} FROM producttables WHERE id = $1`,
@@ -496,14 +494,13 @@ app.post("/open-table", authUser.authenticateToken, (req, res) => {
       if (err) {
         console.log("Error extracting a column:", err);
       } else {
-        array = results.rows[0]["table" + tableNumber.toString()];
+        const array = results.rows[0]["table" + tableNumber.toString()];
+        app.post("/send-array", authUser.authenticateToken, (req, res) => {
+          res.json({ array });
+        });
       }
     }
   );
-});
-
-app.post("/send-array", authUser.authenticateToken, (req, res) => {
-  res.json({ array });
 });
 
 app.listen(process.env.PORT || 3000);
