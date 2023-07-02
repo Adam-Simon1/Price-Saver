@@ -8,7 +8,7 @@ fs.writeFileSync("src\\csv\\results_kaufland.csv", "", (err) => {
   }
 });
 
-const appKaufland = (async () => {
+(async () => {
   // Browser setup
   const browser = await puppeteer.launch({
     headless: false,
@@ -100,4 +100,3 @@ const appKaufland = (async () => {
   await browser.close();
 })();
 
-module.exports = appKaufland;
