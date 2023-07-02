@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       returnButton.addEventListener("click", function (event) {
+        const newestText = textArea.value;
+        const lines = newestText.split("\n");
+        const lastItem = lines[lines.length - 1];
         itemArrayTesco.splice(itemArrayTesco.indexOf(lastItem, 1));
 
         setTimeout(() => {
