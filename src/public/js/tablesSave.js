@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
           iconDiv.innerHTML += svgPath;
           h1Div.classList.add("table-container");
           h1Div.setAttribute("id", idArray[indexCounter]);
-          h1.textContent = `Table${i}`;
+          h1.textContent = `Shopping list ${i}`;
           h1Div.appendChild(h1);
           h1Div.appendChild(iconDiv);
           div.appendChild(h1Div);
@@ -77,6 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
               Cookies.set("idCookie", JSON.stringify(idArray), {
                 expires: 3650,
               });
+
+              location.reload();
             } else {
             }
           });

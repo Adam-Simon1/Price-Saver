@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const dropdownOptions = document.querySelectorAll(".dropdown-content a");
   const resetBtn = document.getElementById("resetbtn");
 
-  if (Cookies.get("priceCookie") == "") {
+  if (Cookies.get("priceCookie") == undefined) {
     Cookies.set("priceCookie", 0, { expires: 1 });
   }
   // Getting data from .csv file based on checkboxes

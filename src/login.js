@@ -506,6 +506,24 @@ app.post("/send-array", authUser.authenticateToken, (req, res) => {
   res.json({ array });
 });
 
+let tableCount;
+app.post("/table-count-req", authUser.authenticateToken, (req, res) => {
+  const userID = req.user.id;
+  const elementIdExtractQuery = "SELECT idarray FROM elementid WHERE id = $1";
+
+  connection.query(elementIdExtractQuery, [userID], (err, results) => {
+    if (err) {
+      console.log("Error extracting id array:", err);
+    } else {
+      tableCount = results.rows[0].idarray;
+    }
+  });
+});
+
+app.post("/table-count-res", (req, res) => {
+  res.json({ tableCount: tableCount });
+});
+
 app.listen(process.env.PORT || 3000);
 
 module.exports = app;

@@ -1,12 +1,13 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv").config({
-  path: `${__dirname}/envvars.env`
+  path: `${__dirname}/envvars.env`,
 });
 
 function authenticateToken(req, res, next) {
   const token = req.cookies.token;
 
   if (!token) {
+    res.render("not_signed_in");
     return res.sendStatus(401);
   }
 
@@ -18,7 +19,7 @@ function authenticateToken(req, res, next) {
     req.user = {
       id: decoded.id,
       email: decoded.email,
-      username: decoded.username
+      username: decoded.username,
     };
     next();
   });

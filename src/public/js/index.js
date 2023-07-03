@@ -19,16 +19,18 @@ function openLink5() {
 }
 
 function openLink6() {
-  window.location.href = "https://github.com/Adam-Simon1/Price-Saver"
+  window.location.href = "https://github.com/Adam-Simon1/Price-Saver";
 }
 
-const loginForm = document.getElementById("login-form");
+try {
+  const loginForm = document.getElementById("login-form");
 
-loginForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+  loginForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-  document.getElementById("email").value = "";
-  document.getElementById("password").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("password").value = "";
 
-  form.submit();
-});
+    form.submit();
+  });
+} catch (error) {}

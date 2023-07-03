@@ -5,9 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
     <link rel="stylesheet" href="../css/home.css" />
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon-16x16.png"
+    />
     <link rel="manifest" href="assets/site.webmanifest" />
     <script src="../js/index.js" defer></script>
     <script src="../js/logout-menu.js" defer></script>
@@ -84,30 +98,14 @@
       </div>
     </nav>
 
-    <div class="menu-btn-container">
-      <button class="menu-btn" id="menu-btn">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="icon icon-tabler icon-tabler-menu-2"
-          width="48"
-          height="48"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="#000000"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M4 6l16 0" />
-          <path d="M4 12l16 0" />
-          <path d="M4 18l16 0" />
-        </svg>
-      </button>
+    <div class="border"></div>
+
+    <div class="menu-btn">
+      <div class="menu-btn__burger"></div>
     </div>
 
     <nav class="menu" id="menu">
-      <ul>
+      <ul id="menu-list">
         <li><button onclick="openLink6()">Github Repository</button></li>
         <li>
           <button id="listbtn" onclick="openLink5()">Shopping Lists</button>
@@ -185,8 +183,9 @@
     <script>
       const listBtn = document.getElementById("listbtn");
       const signOut = document.getElementById("sign-out");
-      const menuBtn = document.getElementById("menu-btn");
       const menu = document.getElementById("menu");
+      const menuBtn = document.querySelector(".menu-btn");
+      const menuList = document.getElementById("menu-list");
 
       listBtn.addEventListener("click", () => {
         console.log("pressed");
@@ -198,11 +197,32 @@
         Cookies.remove("token");
       });
 
+      let menuOpen = false;
       menuBtn.addEventListener("click", () => {
-        if (menu.style.display === "flex") {
-          menu.style.display = "none";
+        if (!menuOpen) {
+          menuBtn.classList.add("open");
+          menuOpen = true;
         } else {
-          menu.style.display = "flex";
+          menuBtn.classList.remove("open");
+          menuOpen = false;
+        }
+
+        if (menu.classList === "show") {
+          menu.classList.toggle("");
+        } else {
+          menu.classList.toggle("show");
+        }
+
+        if (menu.classList !== "show") {
+          menuList.style.display = "none";
+        }
+      });
+
+      menu.addEventListener("transitionend", (event) => {
+        if (event.propertyName === "height") {
+          if (menu.classList.contains("show")) {
+            menuList.style.display = "flex";
+          }
         }
       });
     </script>

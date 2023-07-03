@@ -1,297 +1,317 @@
 @font-face {
-    font-family: 'intro';
-    src: url('../fonts/Intro-Trial-Rg.ttf');
+  font-family: "intro";
+  src: url("../fonts/Intro-Trial-Rg.ttf");
 }
 @font-face {
-    font-family: 'quicksand';
-    src: url('../fonts/Quicksand-Regular.ttf');
+  font-family: "quicksand";
+  src: url("../fonts/Quicksand-Regular.ttf");
 }
 
-html{
-    overflow-x: hidden;
-    overflow-y: scroll;
+html {
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
-body{
-    font-family: quicksand;
-    background-color: #e7ecea;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 110px 120px 130px 5fr;
+body {
+  font-family: quicksand;
+  background-color: #e7ecea;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 110px 120px 130px 5fr;
 }
 
-#table-container{
-    grid-row: 4/5;
-    grid-column: 3/4;
+#table-container {
+  grid-row: 4/5;
+  grid-column: 3/4;
 }
 
-#table-container2{
-    grid-row: 4/5;
-    grid-column: 1/2;
+#table-container2 {
+  grid-row: 4/5;
+  grid-column: 1/2;
 }
 
-.table-name{
-    font-size: 3rem;
-    font-family: quicksand;
+.table-name {
+  font-size: 3rem;
+  font-family: quicksand;
 }
 
 table {
-    font-family: quicksand;
-    width: 100%;
-    font-size: 1.3rem;
-    border-radius: 1.5rem;
-    border-collapse: collapse;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    background-color: white;
-    text-align: left;
-    overflow: auto;
-    max-height: 500px;
-    padding-right: 0px;
+  font-family: quicksand;
+  width: 100%;
+  font-size: 1.3rem;
+  border-radius: 1.5rem;
+  border-collapse: collapse;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background-color: white;
+  text-align: left;
+  overflow: auto;
+  max-height: 500px;
+  padding-right: 0px;
 }
 
 table th {
-    background-color: #2CC185;
-    color: white;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    padding: 0.75rem 2rem;
-    letter-spacing: 0.1rem;
-    font-size: 1.5rem;
-    font-weight: 900;
-    position: sticky;
-    top: 0;
-    z-index: 1;
+  background-color: #2cc185;
+  color: white;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  padding: 0.75rem 2rem;
+  letter-spacing: 0.1rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
-  
+
 th.product_header {
-    border-top-left-radius: 1.5rem;
+  border-top-left-radius: 1.5rem;
 }
 
-th.total_price_header{
-    border-top-right-radius: 1.5rem; 
+th.total_price_header {
+  border-top-right-radius: 1.5rem;
 }
 
-.quantity-container{
-    height: 4.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.quantity-container {
+  height: 4.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.quantity-input{
-    top: 50%;
-    width: 3rem;
-    height: 3rem;
-    font-family: quicksand;
-    font-size: 1.3rem;
-    text-align: center;
-    padding-bottom: 0.2rem;
-    border: none;
+.quantity-input {
+  top: 50%;
+  width: 3rem;
+  height: 3rem;
+  font-family: quicksand;
+  font-size: 1.3rem;
+  text-align: center;
+  padding-bottom: 0.2rem;
+  border: none;
 }
 
 table td {
-    padding: 1rem 2rem;
+  padding: 1rem 2rem;
 }
 
-.tablebtn-container{
-    grid-row: 2/3;
-    grid-column: 2/3;
-    justify-self: center;
-    align-self: center;
+.tablebtn-container {
+  grid-row: 2/3;
+  grid-column: 2/3;
+  justify-self: center;
+  align-self: center;
 }
 
-#tablebtn{
-    width: 12rem;
-    height: 3rem;
-    border-radius: 1.5rem;
-    border: none;
-    background-color: white;
-    font-family: quicksand;
-    font-size: 1.3rem;
-    color: #2CC185;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    transition: transform 0.2s ease;
+#tablebtn {
+  width: 12rem;
+  height: 3rem;
+  border-radius: 1.5rem;
+  border: none;
+  background-color: white;
+  font-family: quicksand;
+  font-size: 1.3rem;
+  color: #2cc185;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  transition: transform 0.2s ease;
 }
 
-#tablebtn:hover{
-    color: #74777b; 
+#tablebtn:hover {
+  color: #74777b;
 }
 
-#tablebtn:active{
-    transform: translateY(4px);
+#tablebtn:active {
+  transform: translateY(4px);
 }
 
-#total-price h1{
-    font-family: quicksand;
+#total-price h1 {
+  font-family: quicksand;
 }
 
-#h1-kaufland{
-    grid-row: 3/4;
-    grid-column: 3/4;
-    justify-self: center;
-    align-self: center;
+#h1-kaufland {
+  grid-row: 3/4;
+  grid-column: 3/4;
+  justify-self: center;
+  align-self: center;
 }
 
-#total-price{
-    grid-row: 3/4;
-    grid-column: 2/3;
-    justify-self: center;
-    align-self: center;
+#total-price {
+  grid-row: 3/4;
+  grid-column: 2/3;
+  justify-self: center;
+  align-self: center;
 }
 
-#h1-tesco{
-    grid-column: 1/2;
-    grid-row: 3/4;
-    justify-self: center;
-    align-self: center;
+#h1-tesco {
+  grid-column: 1/2;
+  grid-row: 3/4;
+  justify-self: center;
+  align-self: center;
 }
 
-.savebtn{
-    width: 10rem;
-    height: 3rem;
-    border-radius: 1.5rem;
-    border: none;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    background-color: #2CC185;
-    color: white;
-    font-family: quicksand;
-    font-size: 1.5rem;
-    transition: transform 0.2s ease;
+.savebtn {
+  width: 10rem;
+  height: 3rem;
+  border-radius: 1.5rem;
+  border: none;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background-color: #2cc185;
+  color: white;
+  font-family: quicksand;
+  font-size: 1.5rem;
+  transition: transform 0.2s ease;
 }
 
-.savebtn:hover{
-    color: #74777b;
+.savebtn:hover {
+  color: #74777b;
 }
 
-.savebtn:active{
-    transform: translateY(5px);
+.savebtn:active {
+  transform: translateY(5px);
 }
 
-.save{
-    grid-row: 4/5;
-    grid-column: 2/3;
-    justify-self: center;
+.save {
+  grid-row: 4/5;
+  grid-column: 2/3;
+  justify-self: center;
 }
 
-.message{
-    font-family: quicksand;
+.message {
+  font-family: quicksand;
+  font-size: 2rem;
+  color: #2cc185;
+  z-index: 2;
+  text-align: center;
+}
+
+.saved {
+  color: #2cc185;
+  font-size: 1.2rem;
+}
+
+.saved-container {
+  grid-row: 4/5;
+  grid-column: 2/3;
+  margin-top: 3rem;
+  justify-self: center;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1500px) {
+  body {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  #total-price h1 {
+    font-size: 1.2rem;
+  }
+
+  table {
+    font-size: 1rem;
+  }
+
+  table th,
+  table td {
+    font-size: 1rem;
+  }
+
+  #h1-tesco h1,
+  #h1-kaufland h1 {
     font-size: 2rem;
-    color: #2CC185;
-    z-index: 2;
-    text-align: center;
+  }
+
+  #tablebtn {
+    width: 10rem;
+  }
 }
 
-@media only screen and (max-width: 1500px){
-    body{
-        grid-template-columns: 1fr 1fr 1fr; 
-    }
+@media only screen and (max-width: 1200px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 110px 120px 130px min-content 130px min-content 100px;
+  }
 
-    #total-price h1{
-        font-size: 1.2rem;
-    }
+  #table-container {
+    grid-row: 4/5;
+    grid-column: 1/2;
+  }
 
-    table {
-        font-size: 1rem;
-    }
+  #table-container2 {
+    grid-row: 6/7;
+    grid-column: 1/2;
+  }
 
-    table th, table td{
-        font-size: 1rem;
-    }
+  #h1-tesco {
+    grid-row: 5/6;
+    grid-column: 1/2;
+  }
 
-    #h1-tesco h1, #h1-kaufland h1{
-        font-size: 2rem;
-    }
+  #h1-kaufland {
+    grid-row: 3/4;
+    grid-column: 1/2;
+  }
 
-    #tablebtn{
-        width: 10rem;
-    }
-}
+  .tablebtn-container {
+    grid-row: 2/3;
+    grid-column: 1/2;
+  }
 
-@media only screen and (max-width: 1200px){
-    body{
-        grid-template-columns: 1fr;
-        grid-template-rows: 110px 120px 130px 1fr 130px 1fr 100px;
-    }
+  #total-price {
+    grid-column: 1/2;
+    grid-row: 7/8;
+  }
 
-    #table-container{
-        grid-row: 4/5;
-        grid-column: 1/2;
-    }
-    
-    #table-container2{
-        grid-row: 6/7;
-        grid-column: 1/2;
-    }
+  #total-price h1 {
+    font-size: 1.5rem;
+  }
 
-    #h1-tesco{
-        grid-row: 5/6;
-        grid-column: 1/2;
-    }
+  #tablebtn {
+    width: 12rem;
+  }
 
-    #h1-kaufland{
-        grid-row: 3/4;
-        grid-column: 1/2;
-    }
+  .quantity-input {
+    font-size: 1rem;
+  }
 
-    .tablebtn-container{
-        grid-row: 2/3;
-        grid-column: 1/2;
-    }
+  .save {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    align-self: center;
+  }
 
-    #total-price{
-        grid-column: 1/2;
-        grid-row: 7/8;
-    }
-
-    #total-price h1{
-        font-size: 1.5rem;
-    }
-
-    #tablebtn{
-        width: 12rem;
-    }
-    
-    .quantity-input{
-        font-size: 1rem;  
-    }
-    
-    .save{
-        grid-column: 1/2;
-        grid-row: 1/2;
-        align-self: center;
-    }
+  .saved-container{
+    grid-row: 1/2;
+    grid-column: 1/2;
+  }
 }
 
 @media only screen and (max-width: 530px) {
-    table th{
-        font-size: 1rem;
-        padding: 0.75rem 1rem;
-        padding-right: 1rem;
-    }
+  table th {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    padding-right: 1rem;
+  }
 
-    table td{
-        font-size: 1rem;
-        width: 20%;
-        padding: 1rem 1rem;
-    }
+  table td {
+    font-size: 1rem;
+    width: 20%;
+    padding: 1rem 1rem;
+  }
 
-    .quantity-input{
-        font-size: 1rem;  
-    }
+  .quantity-input {
+    font-size: 1rem;
+  }
 
-    .quantity-container{
-        padding-left: 3rem;
-    }
+  .quantity-container {
+    padding-left: 3rem;
+  }
 }
 
 @media only screen and (max-width: 420px) {
-    table th{
-        font-size: 0.9rem;
-        padding: 0.4rem 1rem;
-        padding-right: 0.9rem;
-    }
+  table th {
+    font-size: 0.9rem;
+    padding: 0.4rem 1rem;
+    padding-right: 0.9rem;
+  }
 
-    table td{
-        font-size: 0.9rem;
-        padding: 0.6rem 1rem;
-    }
+  table td {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
 }

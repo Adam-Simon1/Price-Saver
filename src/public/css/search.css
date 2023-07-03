@@ -150,7 +150,8 @@ body{
     padding: 2.5rem;
     font-size: 1.125rem;
     font-family: quicksand;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; z-index: 1;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; 
+    z-index: 1;
 }
 
 .price_div{
@@ -345,6 +346,14 @@ body{
         justify-self: center;
         grid-row: 5/6;
         flex-direction: row;   
+    }
+
+    .checkbox-item{
+        padding-right: 1rem;
+    }
+
+    .checkboxes>div:nth-child(3){
+        padding-right: 0rem;
     }
 
     .buttons{
