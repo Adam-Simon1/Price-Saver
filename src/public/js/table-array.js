@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const textArea = document.getElementById("list-field");
   const suggestionsContainer = document.querySelector(
     ".autocomplete-suggestions"
@@ -9,13 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const cookieValue = Cookies.get("textareaCookie");
   if (cookieValue !== undefined) {
     const textareaValue = Cookies.get("textareaCookie");
-    console.log(textareaValue);
     const textareaValueModified = textareaValue.split("\n").join("\n");
     textArea.value = textareaValueModified;
   }
-
-  let itemArrayTesco = [];
-  let itemArrayKaufland = [];
 
   const tesco = "results_tesco.csv";
   fetch(tesco)
@@ -23,50 +19,20 @@ document.addEventListener("DOMContentLoaded", function () {
     .then((data) => {
       const dataArray = parseCSVData(data);
 
-      suggestionsContainer.addEventListener("click", function (event) {
-        const newestText = textArea.value;
-        const lines = newestText.split("\n");
-        const lastItem = lines[lines.length - 1];
+      suggestionsContainer.addEventListener("click", () => {
         setTimeout(function () {
-          if (dataArray.includes(lastItem)) {
-            const textareaValueC = textArea.value;
-            Cookies.set("textareaCookie", textareaValueC, {
-              expires: 1,
-            });
-
-            itemArrayTesco.push(lastItem);
-
-            Cookies.set("tescoCookie", JSON.stringify(itemArrayTesco), {
-              expires: 1,
-            });
-          }
+          appendArray("tesco", dataArray);
+          textAreaCookie();
         }, 100);
       });
 
-      returnButton.addEventListener("click", function (event) {
-        const newestText = textArea.value;
-        const lines = newestText.split("\n");
-        const lastItem = lines[lines.length - 1];
-        itemArrayTesco.splice(itemArrayTesco.indexOf(lastItem, 1));
+      returnButton.addEventListener("click", () => {
+        removeArray("tesco");
 
         setTimeout(() => {
-          const textareaValueC = textArea.value;
-          Cookies.set("textareaCookie", textareaValueC, {
-            expires: 1,
-          });
+          textAreaCookie();
         }, 100);
-
-        Cookies.set("tescoCookie", JSON.stringify(itemArrayTesco), {
-          expires: 1,
-        });
       });
-
-      const tescoCookieString = Cookies.get("tescoCookie");
-      const tescoCookie = JSON.parse(tescoCookieString);
-      console.log(tescoCookie);
-      itemArrayTesco = tescoCookie;
-
-      itemArrayTesco = itemArrayTesco.filter((element) => element !== "");
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
@@ -79,63 +45,26 @@ document.addEventListener("DOMContentLoaded", function () {
       const dataArray = parseCSVData(data);
 
       suggestionsContainer.addEventListener("click", function (event) {
-        const newestText = textArea.value;
-        const lines = newestText.split("\n");
-        const lastItem = lines[lines.length - 1];
-
         setTimeout(function () {
-          if (dataArray.includes(lastItem)) {
-            const textareaValueC = textArea.value;
-            Cookies.set("textareaCookie", textareaValueC, {
-              expires: 1,
-            });
-            itemArrayKaufland.push(lastItem);
-
-            Cookies.set("kauflandCookie", JSON.stringify(itemArrayKaufland), {
-              expires: 1,
-            });
-          }
+          appendArray("kaufland", dataArray);
+          textAreaCookie();
         }, 100);
       });
 
       returnButton.addEventListener("click", function (event) {
-        const newestText = textArea.value;
-        const lines = newestText.split("\n");
-        const lastItem = lines[lines.length - 1];
-
-        itemArrayKaufland.splice(itemArrayKaufland.indexOf(lastItem, 1));
+        removeArray("kaufland");
 
         setTimeout(() => {
-          const textareaValueC = textArea.value;
-          Cookies.set("textareaCookie", textareaValueC, {
-            expires: 1,
-          });
+          textAreaCookie();
         }, 100);
-
-        Cookies.set("kauflandCookie", JSON.stringify(itemArrayKaufland), {
-          expires: 1,
-        });
       });
-
-      const kauflandCookieString = Cookies.get("kauflandCookie");
-      const kauflandCookie = JSON.parse(kauflandCookieString);
-
-      itemArrayKaufland = kauflandCookie;
-
-      itemArrayKaufland = itemArrayKaufland.filter((element) => element !== "");
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
 
   nextPage.addEventListener("click", () => {
-    saveArrayLocally(itemArrayKaufland, key1);
-    saveArrayLocally(itemArrayTesco, key2);
-
-    const textareaValueC = textArea.value;
-    Cookies.set("textareaCookie", textareaValueC, {
-      expires: 1,
-    });
+    textAreaCookie();
   });
 
   function parseCSVData(csvData) {
@@ -143,10 +72,40 @@ document.addEventListener("DOMContentLoaded", function () {
     return rows.map((row) => row.trim());
   }
 
-  function saveArrayLocally(array, key) {
-    localStorage.setItem(key, JSON.stringify(array));
+  function appendArray(key, refrenceData) {
+    const newestText = textArea.value;
+    const lines = newestText.split("\n");
+    const lastItem = lines[lines.length - 1];
+
+    let storage = JSON.parse(localStorage.getItem(key));
+    if (storage == null) {
+      storage = [];
+    }
+
+    if (refrenceData.includes(lastItem)) {
+      storage.push(lastItem);
+      localStorage.setItem(key, JSON.stringify(storage));
+    }
   }
 
-  const key1 = "kaufland";
-  const key2 = "tesco";
+  function removeArray(key) {
+    const newestText = textArea.value;
+    const lines = newestText.split("\n");
+    const lastItem = lines[lines.length - 1];
+
+    let storage = JSON.parse(localStorage.getItem(key));
+    if (storage == null) {
+      storage = [];
+    }
+
+    storage.splice(storage.indexOf(lastItem, 1));
+    localStorage.setItem(key, JSON.stringify(storage));
+  }
+
+  function textAreaCookie() {
+    const textareaValue = textArea.value;
+    Cookies.set("textareaCookie", textareaValue, {
+      expires: 1,
+    });
+  }
 });
