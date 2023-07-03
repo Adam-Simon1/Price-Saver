@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", function () {
   tableButton.addEventListener("click", function () {
     console.log(itemArrayKaufland, itemArrayTesco);
 
-    if (itemArrayKaufland.length > 0) {
+    if (itemArrayKaufland.length > 0 || itemArrayKaufland !== null) {
       createTable(
         itemArrayKaufland,
         "Kaufland",
@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "table-container"
       );
     }
-    if (itemArrayTesco.length > 0) {
+    if (itemArrayTesco.length > 0 || itemArrayKaufland !== null) {
       createTable(itemArrayTesco, "Tesco", "h1-tesco", "table-container2");
     }
 
