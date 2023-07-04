@@ -524,6 +524,36 @@ app.post("/table-count-res", (req, res) => {
   res.json({ tableCount: tableCount });
 });
 
+let kauflandArray;
+let tescoArray;
+app.post("/autocomplete-data-req", (req, res) => {
+  connection.query(
+    "SELECT kaufland FROM autocomplete WHERE id = 1",
+    (err, results) => {
+      if (err) {
+        console.log("Error getting kaufland data:", err);
+      } else {
+        kauflandArray = results.rows[0].kaufland;
+      }
+    }
+  );
+
+  connection.query(
+    "SELECT tesco FROM autocomplete WHERE id = 1",
+    (err, results) => {
+      if (err) {
+        console.log("Error getting tesco data:", err);
+      } else {
+        tescoArray = results.rows[0].tesco;
+      }
+    }
+  );
+});
+
+app.post("/autocomplete-data-res", (req, res) => {
+  res.json({ kauflandArray: kauflandArray, tescoArray: tescoArray });
+});
+
 app.listen(process.env.PORT || 3000);
 
 module.exports = app;

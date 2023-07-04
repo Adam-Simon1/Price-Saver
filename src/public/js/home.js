@@ -17,13 +17,14 @@ document.addEventListener("DOMContentLoaded", function () {
   if (Cookies.get("priceCookie") == undefined) {
     Cookies.set("priceCookie", 0, { expires: 1 });
   }
-  // Getting data from .csv file based on checkboxes
-  let csvFiles = [];
 
-  // Create an array of fetch promises
-  let fetchPromises = csvFiles.map((url) =>
-    fetch(url).then((response) => response.text())
-  );
+  axios
+    .post("/autocomplete-data-req", {})
+    .then((response) => {})
+    .catch((err) => {});
+
+  let kauflandArray;
+  let tescoArray;
 
   // Dropdown menu value
   let selectedValue;
@@ -47,17 +48,22 @@ document.addEventListener("DOMContentLoaded", function () {
       checkboxes[i].checked = false;
       allCheckbox.checked = false;
     }
+    location.reload();
   });
 
+  let autocompleteData;
   // Calling applyChanges() function after pressing the button
   applyChangesButton.addEventListener("click", async function (event) {
-    applyChanges();
-
     try {
-      // Use Promise.all() to fetch all the files concurrently
-      const dataArray = await Promise.all(fetchPromises);
-      const combinedData = dataArray.join("\n"); // Combine the CSV data from multiple files
-      const autocompleteData = parseCSVData(combinedData);
+      await fetch("/autocomplete-data-res", { method: "POST" })
+        .then((response) => response.json())
+        .then((data) => {
+          kauflandArray = JSON.parse(data.kauflandArray);
+          tescoArray = JSON.parse(data.tescoArray);
+        });
+
+      applyChanges();
+      console.log(autocompleteData);
 
       // Showing autocomplete suggestions
       inputField.addEventListener("input", function (event) {
@@ -156,46 +162,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Adding into array if the checkboxes are checked
     if (tescoCheckbox.checked == true && kauflandCheckbox.checked == true) {
-      csvFiles = ["results_kaufland.csv", "results_tesco.csv"];
+      autocompleteData = kauflandArray.concat(tescoArray);
     } else if (kauflandCheckbox.checked == true) {
-      csvFiles = ["results_kaufland.csv"];
+      autocompleteData = kauflandArray;
     } else if (tescoCheckbox.checked == true) {
-      csvFiles = ["results_tesco.csv"];
+      autocompleteData = tescoArray;
     }
 
     // Removing from array if the checkboxes arent checked
     if (tescoCheckbox.checked == false && kauflandCheckbox.checked == false) {
-      csvFiles = [];
+      autocompleteData;
     } else if (tescoCheckbox.checked == false) {
-      csvFiles = ["results_kaufland.csv"];
+      autocompleteData = kauflandArray;
     } else if (kauflandCheckbox.checked == false) {
-      csvFiles = ["results_tesco.csv"];
+      autocompleteData = tescoArray;
     }
-
-    // Fething the promises from csvFiles array
-    fetchPromises = csvFiles.map((url) =>
-      fetch(url).then((response) => response.text())
-    );
-  }
-
-  // Parsing the data from .csv file, in order to be separated in rows
-  function parseCSVData(csvData) {
-    const rows = csvData.split("\n");
-    return rows.map((row) => row.trim());
   }
 
   // Function that filters and sorts the suggestions based on price
   function getAutocompleteSuggestions(inputText, autocompleteData) {
     const inputWords = removeDiacritics(inputText.toLowerCase()).split(" ");
     const matchingSuggestions = autocompleteData.filter((suggestion) => {
-      const suggestionWords = removeDiacritics(suggestion.toLowerCase()).split(
-        " "
-      );
-      return inputWords.every((inputWord) =>
-        suggestionWords.some((suggestionWord) =>
-          suggestionWord.startsWith(inputWord)
-        )
-      );
+      if (suggestion) {
+        const suggestionWords = removeDiacritics(
+          suggestion.toLowerCase()
+        ).split(" ");
+        return inputWords.every((inputWord) =>
+          suggestionWords.some((suggestionWord) =>
+            suggestionWord.startsWith(inputWord)
+          )
+        );
+      }
+      return false;
     });
 
     // Sort the suggestions based on price (ascending order)
@@ -203,16 +201,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const priceA = parseFloat(a.split(";")[1].replace(",", ".").trim());
       const priceB = parseFloat(b.split(";")[1].replace(",", ".").trim());
       let ranking = priceA - priceB;
-
-      if (selectedValue == "lowest-highest") {
-        ranking = priceA - priceB;
-      } else if (selectedValue == "highest-lowest") {
-        ranking = priceB - priceA;
-      } else if (selectedValue == "a-z") {
-        ranking = a.localeCompare(b);
-      } else if (selectedValue == "z-a") {
-        ranking = b.localeCompare(a);
-      }
 
       return ranking;
     });

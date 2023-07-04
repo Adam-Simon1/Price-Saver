@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           });
 
-          h1.addEventListener("click", () => {
+          h1.addEventListener("click", async () => {
             const tableId = h1Div.getAttribute("id");
             const tableNumber = parseInt(tableId, 10);
 
@@ -94,8 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
               })
               .catch((err) => {});
 
-            const startTime = performance.now();
-            fetch("/send-array", { method: "POST" })
+            let obj;
+
+            await fetch("/send-array", { method: "POST" })
               .then((response) => response.json())
               .then((data) => {
                 const combinedArray = data.array;
@@ -104,47 +105,44 @@ document.addEventListener("DOMContentLoaded", () => {
                   1,
                   combinedArray.length - 1
                 );
-                const obj = JSON.parse(jsonString);
-
-                let itemArrayKauflandString;
-                let itemArrayTescoString;
-                let itemArrayTesco;
-                let itemArrayKaufland;
-
-                if (obj.includes(":")) {
-                  itemArrayTescoString = obj.split(":")[0];
-                  itemArrayKauflandString = obj.split(":")[1];
-                  itemArrayTesco = JSON.parse(itemArrayTescoString);
-                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-                } else if (obj.includes("t")) {
-                  itemArrayTescoString = obj.replace("t", "");
-                  itemArrayTesco = JSON.parse(itemArrayTescoString);
-                } else if (obj.includes("k")) {
-                  itemArrayKauflandString = obj.replace("k", "");
-                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-                }
-
-                const key1 = "kaufland";
-                const key2 = "tesco";
-
-                saveArrayLocally(itemArrayKaufland, key1, tableNumber);
-                saveArrayLocally(itemArrayTesco, key2, tableNumber);
-
-                function saveArrayLocally(array, key, tableNumber) {
-                  localStorage.setItem(
-                    `${key}_${tableNumber}`,
-                    JSON.stringify(array)
-                  );
-                }
-
-                window.location.href = `/saved-tables?tableNumber=${tableNumber}`;
-                const endTime = performance.now();
-                const totalTime = endTime - startTime;
-                console.log(`Request duration: ${totalTime} milliseconds`);
+                obj = JSON.parse(jsonString);
               })
               .catch((error) => {
                 console.error("Error:", error);
               });
+
+            let itemArrayKauflandString;
+            let itemArrayTescoString;
+            let itemArrayTesco;
+            let itemArrayKaufland;
+
+            if (obj.includes(":")) {
+              itemArrayTescoString = obj.split(":")[0];
+              itemArrayKauflandString = obj.split(":")[1];
+              itemArrayTesco = JSON.parse(itemArrayTescoString);
+              itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+            } else if (obj.includes("t")) {
+              itemArrayTescoString = obj.replace("t", "");
+              itemArrayTesco = JSON.parse(itemArrayTescoString);
+            } else if (obj.includes("k")) {
+              itemArrayKauflandString = obj.replace("k", "");
+              itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+            }
+
+            const key1 = "kaufland";
+            const key2 = "tesco";
+
+            saveArrayLocally(itemArrayKaufland, key1, tableNumber);
+            saveArrayLocally(itemArrayTesco, key2, tableNumber);
+
+            function saveArrayLocally(array, key, tableNumber) {
+              localStorage.setItem(
+                `${key}_${tableNumber}`,
+                JSON.stringify(array)
+              );
+            }
+
+            window.location.href = `/saved-tables?tableNumber=${tableNumber}`;
           });
         }
       }

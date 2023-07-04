@@ -1,17 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
   const profileBtn = document.getElementById("profile-btn");
-  let content = document.getElementById("dropdown-content");
+  const content = document.querySelector(".dropdown-content");
+  const dropdownList = document.querySelector(".dropdown-list");
 
   profileBtn.addEventListener("click", () => {
     console.log("pressed");
-    content.style.display = "block";
-  });
+    content.classList.toggle('show');
 
-  document.addEventListener("click", (event) => {
-    if (!profileBtn.contains(event.target)) {
-      content.style.display = "none";
+    if (content.classList !== "show") {
+      dropdownList.style.display = "none";
     }
   });
+
+  content.addEventListener('transitionend', (event) => {
+    if(event.propertyName === "height"){
+      if (content.classList.contains("show")) {
+        dropdownList.style.display = "flex";
+      }
+    }
+  })
 
   content.addEventListener("click", (event) => {
     event.preventDefault();

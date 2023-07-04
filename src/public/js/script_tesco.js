@@ -1,15 +1,41 @@
 // Importing modules
 const puppeteer = require("puppeteer");
-const fs = require("fs");
+const { Client } = require("pg");
+const dotenv = require("dotenv").config({
+  path: `${__dirname}/envvars.env`,
+});
 
-fs.writeFileSync("src\\csv\\results_tesco.csv", "", (err) => {
-  if (err) {
-    console.log(err);
+const connection = new Client({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  port: process.env.DB_PORT,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+connection.connect((error) => {
+  if (error) {
+    console.log("Error:", error);
+  } else {
+    console.log("Connected");
   }
 });
 
-(async () => {
+connection.query(
+  "UPDATE autocomplete SET tesco = NULL WHERE id = 1",
+  (err, results) => {
+    if (err) {
+      console.log("Error clearing a column:", err);
+    }
+  }
+);
 
+let tescoArray = [];
+
+(async () => {
   // Browser setup
   const browser = await puppeteer.launch({
     headless: false,
@@ -23,20 +49,19 @@ fs.writeFileSync("src\\csv\\results_tesco.csv", "", (err) => {
   // Extracting number of pages from website
   let pageNumber = 1;
   const lastPage = await page.evaluate(() => {
-      const element = document.querySelector(
-        "span:nth-child(10) > div > a > span > span"
-      );
-      return element ? element.textContent : null;
-    });
-    const lastPageNumber = parseInt(lastPage, 10);
+    const element = document.querySelector(
+      "span:nth-child(10) > div > a > span > span"
+    );
+    return element ? element.textContent : null;
+  });
+  const lastPageNumber = parseInt(lastPage, 10);
 
   // Pagination cycle
   while (true) {
-
     // Changing pages
     const url = `${baseUrl}?page=${pageNumber}`;
     await page.goto(url);
-    
+
     // Extracting products from pages and appending them to .csv file
     const productsHandles = await page.$$(
       ".product-container.m-productListing__productsGrid.desktop.hidden.visible-md > div"
@@ -68,13 +93,7 @@ fs.writeFileSync("src\\csv\\results_tesco.csv", "", (err) => {
       } catch (error) {}
 
       if (title !== "Null") {
-        fs.appendFile(
-          "src\\csv\\results_tesco.csv",
-          `${title} ; ${price}\n`,
-          function (err) {
-            if (err) throw err;
-          }
-        );
+        tescoArray.push(title + " ; " + price);
       }
     }
 
@@ -87,6 +106,18 @@ fs.writeFileSync("src\\csv\\results_tesco.csv", "", (err) => {
     }
   }
 
+  const arrayString = JSON.stringify(tescoArray);
+  connection.query(
+    "UPDATE autocomplete SET tesco = $1 WHERE id = 1",
+    [arrayString],
+    (err, results) => {
+      if (err) {
+        console.log("Error inserting array:", err);
+      }
+    }
+  );
+
   // Closing website
   await browser.close();
+  await process.exit();
 })();

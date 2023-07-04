@@ -1,12 +1,39 @@
 // Importing modules
-const fs = require("fs");
 const puppeteer = require("puppeteer");
+const { Client } = require("pg");
+const dotenv = require("dotenv").config({
+  path: `${__dirname}/envvars.env`,
+});
 
-fs.writeFileSync("src\\csv\\results_kaufland.csv", "", (err) => {
-  if (err) {
-    console.log(err);
+const connection = new Client({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  port: process.env.DB_PORT,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+connection.connect((error) => {
+  if (error) {
+    console.log("Error:", error);
+  } else {
+    console.log("Connected");
   }
 });
+
+connection.query(
+  "UPDATE autocomplete SET kaufland = NULL WHERE id = 1",
+  (err, results) => {
+    if (err) {
+      console.log("Error clearing a column:", err);
+    }
+  }
+);
+
+let kauflandArray = [];
 
 (async () => {
   // Browser setup
@@ -72,21 +99,10 @@ fs.writeFileSync("src\\csv\\results_kaufland.csv", "", (err) => {
       if (title1 !== "Null") {
         if (title2 !== "Null") {
           finalTitle = title1 + " " + trimmedTitle2;
-          fs.appendFile(
-            "src\\csv\\results_kaufland.csv",
-            `${finalTitle} ; ${trimmmedPrice}\n`,
-            function (err) {
-              if (err) throw err;
-            }
-          );
+
+          kauflandArray.push(finalTitle + " ; " + trimmmedPrice);
         } else {
-          fs.appendFile(
-            "src\\csv\\results_kaufland.csv",
-            `${title1} ; ${trimmmedPrice}\n`,
-            function (err) {
-              if (err) throw err;
-            }
-          );
+          kauflandArray.push(title1 + " ; " + trimmmedPrice);
         }
       }
     }
@@ -96,7 +112,18 @@ fs.writeFileSync("src\\csv\\results_kaufland.csv", "", (err) => {
     await page.waitForNavigation();
   }
 
+  const arrayString = JSON.stringify(kauflandArray);
+  connection.query(
+    "UPDATE autocomplete SET kaufland = $1 WHERE id = 1",
+    [arrayString],
+    (err, results) => {
+      if (err) {
+        console.log("Error inserting array:", err);
+      }
+    }
+  );
+
   // Closing browser
   await browser.close();
+  await process.exit();
 })();
-

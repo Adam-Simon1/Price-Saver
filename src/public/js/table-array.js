@@ -13,64 +13,38 @@ document.addEventListener("DOMContentLoaded", () => {
     textArea.value = textareaValueModified;
   }
 
-  const tesco = "results_tesco.csv";
-  fetch(tesco)
-    .then((response) => response.text())
-    .then((data) => {
-      const dataArray = parseCSVData(data);
+  let tescoArray;
+  let kauflandArray;
 
-      suggestionsContainer.addEventListener("click", () => {
-        setTimeout(function () {
-          appendArray("tesco", dataArray);
-          textAreaCookie();
-        }, 100);
+  suggestionsContainer.addEventListener("click", async () => {
+    await fetch("/autocomplete-data-res", { method: "POST" })
+      .then((response) => response.json())
+      .then((data) => {
+        tescoArray = JSON.parse(data.tescoArray);
+        kauflandArray = JSON.parse(data.kauflandArray);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
 
-      returnButton.addEventListener("click", () => {
-        removeArray("tesco");
+    setTimeout(function () {
+      appendArray("tesco", tescoArray);
+      appendArray("kaufland", kauflandArray);
+      textAreaCookie();
+    }, 100);
+  });
 
-        setTimeout(() => {
-          textAreaCookie();
-        }, 100);
-      });
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-
-  const kaufland = "results_kaufland.csv";
-  fetch(kaufland)
-    .then((response) => response.text())
-    .then((data) => {
-      const dataArray = parseCSVData(data);
-
-      suggestionsContainer.addEventListener("click", function (event) {
-        setTimeout(function () {
-          appendArray("kaufland", dataArray);
-          textAreaCookie();
-        }, 100);
-      });
-
-      returnButton.addEventListener("click", function (event) {
-        removeArray("kaufland");
-
-        setTimeout(() => {
-          textAreaCookie();
-        }, 100);
-      });
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
-    });
-
+  returnButton.addEventListener("click", () => {
+    removeArray("tesco");
+    removeArray("kaufland");
+    setTimeout(() => {
+      textAreaCookie();
+    }, 100);
+  });
+  
   nextPage.addEventListener("click", () => {
     textAreaCookie();
   });
-
-  function parseCSVData(csvData) {
-    const rows = csvData.split("\n");
-    return rows.map((row) => row.trim());
-  }
 
   function appendArray(key, refrenceData) {
     const newestText = textArea.value;
