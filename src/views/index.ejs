@@ -4,13 +4,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Start Page</title>
     <link rel="stylesheet" href="../css/index.css" />
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon-16x16.png"
+    />
     <link rel="manifest" href="assets/site.webmanifest" />
     <script src="../js/index.js"></script>
   </head>
   <body>
+    <div id="preloader">
+      <div class="loader">
+        <svg
+          width="70"
+          height="70"
+          stroke="#000"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <style>
+            .spinner_V8m1 {
+              transform-origin: center;
+              animation: spinner_zKoa 2s linear infinite;
+            }
+            .spinner_V8m1 circle {
+              stroke-linecap: round;
+              animation: spinner_YpZS 1.5s ease-in-out infinite;
+            }
+            @keyframes spinner_zKoa {
+              100% {
+                transform: rotate(360deg);
+              }
+            }
+            @keyframes spinner_YpZS {
+              0% {
+                stroke-dasharray: 0 150;
+                stroke-dashoffset: 0;
+              }
+              47.5% {
+                stroke-dasharray: 42 150;
+                stroke-dashoffset: -16;
+              }
+              95%,
+              100% {
+                stroke-dasharray: 42 150;
+                stroke-dashoffset: -59;
+              }
+            }
+          </style>
+          <g class="spinner_V8m1">
+            <circle
+              cx="12"
+              cy="12"
+              r="9.5"
+              fill="none"
+              stroke-width="3"
+            ></circle>
+          </g>
+        </svg>
+      </div>
+      <h1>Loading...</h1>
+    </div>
+
     <nav class="navigation">
       <div class="github">
         <svg
@@ -72,18 +139,26 @@
     </article>
 
     <article class="create-table">
-        <img
-          src="../assets/tables.png"
-          alt="Create a table"
-          class="table"
-          width="500px"
-        />
-        <div class="text-table">
-          <h1>Create tables from shopping lists</h1>
-          <h2>
-            Tables separated by shop, to keep it organized. It is also possible to change quantity.
-          </h2>
-        </div>
-      </article>
+      <img
+        src="../assets/tables.png"
+        alt="Create a table"
+        class="table"
+        width="500px"
+      />
+      <div class="text-table">
+        <h1>Create tables from shopping lists</h1>
+        <h2>
+          Tables separated by shop, to keep it organized. It is also possible to
+          change quantity.
+        </h2>
+      </div>
+    </article>
+
+    <script>
+      const loader = document.getElementById("preloader");
+      window.addEventListener("load", () => {
+        loader.style.display = "none";
+      });
+    </script>
   </body>
 </html>

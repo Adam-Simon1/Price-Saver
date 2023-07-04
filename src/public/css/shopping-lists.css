@@ -115,6 +115,28 @@ body{
     transform: translateY(5px);
 }
 
+#preloader {
+    background-color: #e7ecea;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #preloader h1 {
+    font-family: quicksand;
+  }
+  
+  .loader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
 @media only screen and (max-width: 1500px) {
     body{
         grid-template-columns: 0.5fr 1fr 0.5fr;
