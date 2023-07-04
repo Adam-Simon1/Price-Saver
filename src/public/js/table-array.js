@@ -16,8 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let tescoArray;
   let kauflandArray;
 
-  suggestionsContainer.addEventListener("click", async () => {
-    await fetch("/autocomplete-data-res", { method: "POST" })
+  const sendOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  };
+
+  suggestionsContainer.addEventListener("click", () => {
+    fetch("/autocomplete-data", sendOptions)
       .then((response) => response.json())
       .then((data) => {
         tescoArray = JSON.parse(data.tescoArray);

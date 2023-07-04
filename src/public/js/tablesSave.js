@@ -83,66 +83,67 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           });
 
-          h1.addEventListener("click", async () => {
+          h1.addEventListener("click", () => {
             const tableId = h1Div.getAttribute("id");
             const tableNumber = parseInt(tableId, 10);
 
-            axios
-              .post("/open-table", { tableNumber: tableNumber })
-              .then((response) => {
-                console.log("Data sent successfully");
-              })
-              .catch((err) => {});
+            const sendOptions = {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ tableNumber: tableNumber }),
+            };
 
-            let obj;
-
-            await fetch("/send-array", { method: "POST" })
+            fetch("/open-table", sendOptions)
               .then((response) => response.json())
               .then((data) => {
-                const combinedArray = data.array;
+                const combinedArray = JSON.parse(data.array);
                 console.log(combinedArray);
+
                 const jsonString = combinedArray.substring(
                   1,
                   combinedArray.length - 1
                 );
-                obj = JSON.parse(jsonString);
+                const obj = JSON.parse(jsonString);
+                console.log(obj);
+
+                let itemArrayKauflandString;
+                let itemArrayTescoString;
+                let itemArrayTesco;
+                let itemArrayKaufland;
+
+                if (obj.includes(":")) {
+                  itemArrayTescoString = obj.split(":")[0];
+                  itemArrayKauflandString = obj.split(":")[1];
+                  itemArrayTesco = JSON.parse(itemArrayTescoString);
+                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+                } else if (obj.includes("t")) {
+                  itemArrayTescoString = obj.replace("t", "");
+                  itemArrayTesco = JSON.parse(itemArrayTescoString);
+                } else if (obj.includes("k")) {
+                  itemArrayKauflandString = obj.replace("k", "");
+                  itemArrayKaufland = JSON.parse(itemArrayKauflandString);
+                }
+
+                const key1 = "kaufland";
+                const key2 = "tesco";
+
+                saveArrayLocally(itemArrayKaufland, key1, tableNumber);
+                saveArrayLocally(itemArrayTesco, key2, tableNumber);
+
+                function saveArrayLocally(array, key, tableNumber) {
+                  localStorage.setItem(
+                    `${key}_${tableNumber}`,
+                    JSON.stringify(array)
+                  );
+                }
+
+                window.location.href = `/saved-tables?tableNumber=${tableNumber}`;
               })
               .catch((error) => {
                 console.error("Error:", error);
               });
-
-            let itemArrayKauflandString;
-            let itemArrayTescoString;
-            let itemArrayTesco;
-            let itemArrayKaufland;
-
-            if (obj.includes(":")) {
-              itemArrayTescoString = obj.split(":")[0];
-              itemArrayKauflandString = obj.split(":")[1];
-              itemArrayTesco = JSON.parse(itemArrayTescoString);
-              itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-            } else if (obj.includes("t")) {
-              itemArrayTescoString = obj.replace("t", "");
-              itemArrayTesco = JSON.parse(itemArrayTescoString);
-            } else if (obj.includes("k")) {
-              itemArrayKauflandString = obj.replace("k", "");
-              itemArrayKaufland = JSON.parse(itemArrayKauflandString);
-            }
-
-            const key1 = "kaufland";
-            const key2 = "tesco";
-
-            saveArrayLocally(itemArrayKaufland, key1, tableNumber);
-            saveArrayLocally(itemArrayTesco, key2, tableNumber);
-
-            function saveArrayLocally(array, key, tableNumber) {
-              localStorage.setItem(
-                `${key}_${tableNumber}`,
-                JSON.stringify(array)
-              );
-            }
-
-            window.location.href = `/saved-tables?tableNumber=${tableNumber}`;
           });
         }
       }

@@ -13,38 +13,33 @@ document.addEventListener("DOMContentLoaded", function () {
   const saveButton = document.getElementById("savebtn");
 
   saveButton.addEventListener("click", () => {
-    axios
-      .post("/table-count-req", {})
-      .then((response) => {})
-      .catch((err) => {});
+    fetch("/table-count", { method: "POST" })
+      .then((response) => response.json())
+      .then((data) => {
+        const tableCount = JSON.parse(data.tableCount).length;
+        console.log(tableCount);
+        const div = document.getElementById("saved-container");
+
+        if (tableCount < 20) {
+          const text = document.createElement("p");
+          text.classList.add("saved");
+          text.textContent = "Shopping list saved successfully";
+          div.appendChild(text);
+        } else {
+          const text = document.createElement("p");
+          text.classList.add("saved");
+          text.textContent =
+            "The limit of shopping lists is 20. If you want to procced, please remove a shopping list that you don't need.";
+          div.appendChild(text);
+        }
+      });
 
     axios
       .post("/table/data", {
         arrayDataTesco: itemArrayTesco,
         arrayDataKaufland: itemArrayKaufland,
       })
-      .then((response) => {
-        fetch("/table-count-res", { method: "POST" })
-          .then((response) => response.json())
-          .then((data) => {
-            const tableCount = JSON.parse(data.tableCount).length - 1;
-            console.log(tableCount);
-            const div = document.getElementById("saved-container");
-
-            if (tableCount < 20) {
-              const text = document.createElement("p");
-              text.classList.add("saved");
-              text.textContent = "Shopping list saved successfully";
-              div.appendChild(text);
-            } else {
-              const text = document.createElement("p");
-              text.classList.add("saved");
-              text.textContent =
-                "The limit of shopping lists is 20. If you want to procced, please remove a shopping list that you don't need.";
-              div.appendChild(text);
-            }
-          });
-      })
+      .then((response) => {})
       .catch((err) => {
         console.log("Error sending data:", err);
       });

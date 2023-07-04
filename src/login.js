@@ -483,7 +483,6 @@ app.post("/remove-table", authUser.authenticateToken, (req, res) => {
   } catch (error) {}
 });
 
-let array;
 app.post("/open-table", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
   const tableNumber = req.body.tableNumber;
@@ -496,18 +495,16 @@ app.post("/open-table", authUser.authenticateToken, (req, res) => {
       if (err) {
         console.log("Error extracting a column:", err);
       } else {
-        array = results.rows[0]["table" + tableNumber.toString()];
+        const array = JSON.stringify(
+          results.rows[0]["table" + tableNumber.toString()]
+        );
+        res.json({ array: array });
       }
     }
   );
 });
 
-app.post("/send-array", authUser.authenticateToken, (req, res) => {
-  res.json({ array });
-});
-
-let tableCount;
-app.post("/table-count-req", authUser.authenticateToken, (req, res) => {
+app.post("/table-count", authUser.authenticateToken, (req, res) => {
   const userID = req.user.id;
   const elementIdExtractQuery = "SELECT idarray FROM elementid WHERE id = $1";
 
@@ -515,18 +512,14 @@ app.post("/table-count-req", authUser.authenticateToken, (req, res) => {
     if (err) {
       console.log("Error extracting id array:", err);
     } else {
-      tableCount = results.rows[0].idarray;
+      const tableCount = results.rows[0].idarray;
+      res.json({ tableCount: tableCount });
     }
   });
 });
 
-app.post("/table-count-res", (req, res) => {
-  res.json({ tableCount: tableCount });
-});
-
-let kauflandArray;
-let tescoArray;
-app.post("/autocomplete-data-req", (req, res) => {
+app.post("/autocomplete-data", (req, res) => {
+  let kauflandArray;
   connection.query(
     "SELECT kaufland FROM autocomplete WHERE id = 1",
     (err, results) => {
@@ -544,14 +537,11 @@ app.post("/autocomplete-data-req", (req, res) => {
       if (err) {
         console.log("Error getting tesco data:", err);
       } else {
-        tescoArray = results.rows[0].tesco;
+        const tescoArray = results.rows[0].tesco;
+        res.json({ tescoArray: tescoArray, kauflandArray: kauflandArray });
       }
     }
   );
-});
-
-app.post("/autocomplete-data-res", (req, res) => {
-  res.json({ kauflandArray: kauflandArray, tescoArray: tescoArray });
 });
 
 app.listen(process.env.PORT || 3000);

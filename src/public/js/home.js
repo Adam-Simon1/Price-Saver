@@ -14,17 +14,29 @@ document.addEventListener("DOMContentLoaded", function () {
   const dropdownOptions = document.querySelectorAll(".dropdown-content a");
   const resetBtn = document.getElementById("resetbtn");
 
+  let kauflandArray;
+  let tescoArray;
+  let autocompleteData;
+
   if (Cookies.get("priceCookie") == undefined) {
     Cookies.set("priceCookie", 0, { expires: 1 });
   }
 
-  axios
-    .post("/autocomplete-data-req", {})
-    .then((response) => {})
-    .catch((err) => {});
+  const sendOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({}),
+  };
 
-  let kauflandArray;
-  let tescoArray;
+  fetch("/autocomplete-data", sendOptions)
+    .then((response) => response.json())
+    .then((data) => {
+      //console.log(data);
+      kauflandArray = JSON.parse(data.kauflandArray);
+      tescoArray = JSON.parse(data.tescoArray);
+    });
 
   // Dropdown menu value
   let selectedValue;
@@ -43,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //
   resetBtn.addEventListener("click", function (event) {
     const checkboxes = document.querySelectorAll('input[name="checkbox"]');
-    csvFiles = [];
+    autocompleteData;
     for (var i = 0; i < checkboxes.length; i++) {
       checkboxes[i].checked = false;
       allCheckbox.checked = false;
@@ -51,94 +63,82 @@ document.addEventListener("DOMContentLoaded", function () {
     location.reload();
   });
 
-  let autocompleteData;
   // Calling applyChanges() function after pressing the button
-  applyChangesButton.addEventListener("click", async function (event) {
-    try {
-      await fetch("/autocomplete-data-res", { method: "POST" })
-        .then((response) => response.json())
-        .then((data) => {
-          kauflandArray = JSON.parse(data.kauflandArray);
-          tescoArray = JSON.parse(data.tescoArray);
-        });
+  applyChangesButton.addEventListener("click", function (event) {
+    applyChanges();
+    console.log(autocompleteData);
 
-      applyChanges();
-      console.log(autocompleteData);
+    // Showing autocomplete suggestions
+    inputField.addEventListener("input", function (event) {
+      const inputText = removeDiacritics(this.value);
+      const suggestions = getAutocompleteSuggestions(
+        inputText,
+        autocompleteData
+      );
 
-      // Showing autocomplete suggestions
-      inputField.addEventListener("input", function (event) {
-        const inputText = removeDiacritics(this.value);
-        const suggestions = getAutocompleteSuggestions(
-          inputText,
-          autocompleteData
-        );
-
-        // Rendering the suggestions
-        renderSuggestions(suggestions);
-      });
-      var totalPrice = 0;
-      // After clicking on a suggestion, it is added to a text area, and the input is cleared
-      suggestionsContainer.addEventListener("click", function (event) {
-        if (event.target.classList.contains("autocomplete-suggestion")) {
-          const selectedSuggestion = event.target.innerText;
-          const currentText = textArea.value;
-
-          if (currentText.includes(selectedSuggestion)) {
-            return; // Skip adding duplicate suggestion
-          }
-          const newText = currentText
-            ? currentText + "\n" + selectedSuggestion
-            : selectedSuggestion;
-          textArea.value = newText;
-          suggestionsContainer.innerHTML = "";
-          inputField.value = "";
-
-          // Adding up price
-          const newestText = textArea.value;
-          const lines = newestText.split("\n");
-          lastItem = lines[lines.length - 1];
-          const priceSplit = lastItem.split(";");
-          const price = priceSplit[1];
-          const modifiedPrice = price.replace(",", ".");
-          const modifiedPriceInt = parseFloat(modifiedPrice, 10);
-          totalPrice += modifiedPriceInt;
-          totalPrice = Math.round((totalPrice + Number.EPSILON) * 100) / 100;
-          Cookies.set("priceCookie", totalPrice, { expires: 1 });
-          priceH1Child.textContent = "";
-          priceH1Child.textContent = totalPrice + " €";
-        }
-      });
-
-      // Price cookie, retrieves the last displayed price after refreshing
-      const cookie = Cookies.get("priceCookie");
-      const cookieInt = parseFloat(cookie, 10);
-      if (cookieInt != 0) {
-        priceH1Child.textContent = cookie + " €";
-        totalPrice = cookieInt;
-      }
-
-      // A return button that removes the latest added product
-      returnButton.addEventListener("click", function (event) {
-        // Subtracting price of a removed item
+      // Rendering the suggestions
+      renderSuggestions(suggestions);
+    });
+    var totalPrice = 0;
+    // After clicking on a suggestion, it is added to a text area, and the input is cleared
+    suggestionsContainer.addEventListener("click", function (event) {
+      if (event.target.classList.contains("autocomplete-suggestion")) {
+        const selectedSuggestion = event.target.innerText;
         const currentText = textArea.value;
-        const lines = currentText.split("\n");
-        const lastItem = lines[lines.length - 1];
+
+        if (currentText.includes(selectedSuggestion)) {
+          return; // Skip adding duplicate suggestion
+        }
+        const newText = currentText
+          ? currentText + "\n" + selectedSuggestion
+          : selectedSuggestion;
+        textArea.value = newText;
+        suggestionsContainer.innerHTML = "";
+        inputField.value = "";
+
+        // Adding up price
+        const newestText = textArea.value;
+        const lines = newestText.split("\n");
+        lastItem = lines[lines.length - 1];
         const priceSplit = lastItem.split(";");
         const price = priceSplit[1];
         const modifiedPrice = price.replace(",", ".");
         const modifiedPriceInt = parseFloat(modifiedPrice, 10);
-        totalPrice -= modifiedPriceInt;
+        totalPrice += modifiedPriceInt;
         totalPrice = Math.round((totalPrice + Number.EPSILON) * 100) / 100;
-        priceH1Child.textContent = totalPrice + " €";
         Cookies.set("priceCookie", totalPrice, { expires: 1 });
+        priceH1Child.textContent = "";
+        priceH1Child.textContent = totalPrice + " €";
+      }
+    });
 
-        // Removes last product after pressing the return button
-        lines.pop(); // Remove the last line
-        textArea.value = lines.join("\n");
-      });
-    } catch (error) {
-      console.error("Error loading CSV files:", error);
+    // Price cookie, retrieves the last displayed price after refreshing
+    const cookie = Cookies.get("priceCookie");
+    const cookieInt = parseFloat(cookie, 10);
+    if (cookieInt != 0) {
+      priceH1Child.textContent = cookie + " €";
+      totalPrice = cookieInt;
     }
+
+    // A return button that removes the latest added product
+    returnButton.addEventListener("click", function (event) {
+      // Subtracting price of a removed item
+      const currentText = textArea.value;
+      const lines = currentText.split("\n");
+      const lastItem = lines[lines.length - 1];
+      const priceSplit = lastItem.split(";");
+      const price = priceSplit[1];
+      const modifiedPrice = price.replace(",", ".");
+      const modifiedPriceInt = parseFloat(modifiedPrice, 10);
+      totalPrice -= modifiedPriceInt;
+      totalPrice = Math.round((totalPrice + Number.EPSILON) * 100) / 100;
+      priceH1Child.textContent = totalPrice + " €";
+      Cookies.set("priceCookie", totalPrice, { expires: 1 });
+
+      // Removes last product after pressing the return button
+      lines.pop(); // Remove the last line
+      textArea.value = lines.join("\n");
+    });
   });
 
   // Select All button functionality
