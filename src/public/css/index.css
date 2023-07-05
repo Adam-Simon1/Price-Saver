@@ -19,6 +19,15 @@ body {
   display: grid;
   grid-template-columns: 0.5fr 1fr 0.5fr;
   grid-template-rows: 0.5fr 0.7fr 1fr 0.5fr 2.5fr 3fr;
+  transition: transform 0.5s ease-in-out;
+}
+
+.body.finished{
+  transform: translateY(0%);
+}
+
+.body{
+  transform: translateY(100vh);
 }
 
 .navigation {

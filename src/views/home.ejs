@@ -28,7 +28,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   </head>
-  <body>
+  <body class="body">
     <div id="preloader">
       <div class="loader">
         <svg
@@ -156,7 +156,7 @@
     <div class="menu-btn">
       <div class="menu-btn__burger"></div>
     </div>
-
+    
     <nav class="menu" id="menu">
       <ul id="menu-list">
         <li><button onclick="openLink6()">Github Repository</button></li>
@@ -280,8 +280,11 @@
       });
 
       const loader = document.getElementById("preloader");
+      const page = document.querySelector('.body');
       window.addEventListener("load", () => {
         loader.style.display = "none";
+
+        page.classList.toggle('finished');
       });
     </script>
   </body>

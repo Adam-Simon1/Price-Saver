@@ -24,7 +24,7 @@
     <link rel="manifest" href="assets/site.webmanifest" />
     <script src="../js/index.js"></script>
   </head>
-  <body>
+  <body class="body">
     <div id="preloader">
       <div class="loader">
         <svg
@@ -156,8 +156,11 @@
 
     <script>
       const loader = document.getElementById("preloader");
+      const page = document.querySelector('.body');
       window.addEventListener("load", () => {
         loader.style.display = "none";
+
+        page.classList.toggle('finished');
       });
     </script>
   </body>

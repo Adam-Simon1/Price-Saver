@@ -19,7 +19,16 @@ body{
     display: grid;
     grid-template-columns: .7fr 1fr .7fr;
     grid-template-rows: 130px 1fr;
+    transition: transform 0.5s ease-in-out;
 }
+
+.body.finished{
+    transform: translateY(0%);
+  }
+  
+  .body{
+    transform: translateY(100vh);
+  }
 
 .title h1{
     font-family: quicksand_bold;

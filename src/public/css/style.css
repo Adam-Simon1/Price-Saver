@@ -13,6 +13,15 @@ html{
 
 body {
     background-color: #e7ecea;
+    transition: transform 0.5s ease-in-out;
+}
+
+.body.finished{
+  transform: translateY(0%);
+}
+
+.body{
+  transform: translateY(100vh);
 }
 
 .name {

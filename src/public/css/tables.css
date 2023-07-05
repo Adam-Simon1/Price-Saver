@@ -18,6 +18,15 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 110px 120px 130px 5fr;
+  transition: transform 0.5s ease-in-out;
+}
+
+.body.finished{
+  transform: translateY(0%);
+}
+
+.body{
+  transform: translateY(100vh);
 }
 
 #table-container {
