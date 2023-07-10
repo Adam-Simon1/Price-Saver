@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
+    <link rel="stylesheet" href="../css/reset.css" />
     <link rel="stylesheet" href="../css/home.css" />
     <link
       rel="apple-touch-icon"
@@ -23,6 +24,8 @@
       href="assets/favicon-16x16.png"
     />
     <link rel="manifest" href="assets/site.webmanifest" />
+    <link rel="stylesheet" href="../css/spinner.css">
+    <script src="../js/loader.js" defer></script>
     <script src="../js/index.js" defer></script>
     <script src="../js/logout-menu.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
@@ -32,42 +35,12 @@
     <div id="preloader">
       <div class="loader">
         <svg
-          width="70"
-          height="70"
-          stroke="#000"
+          width="100"
+          height="100"
+          stroke="#fff"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <style>
-            .spinner_V8m1 {
-              transform-origin: center;
-              animation: spinner_zKoa 2s linear infinite;
-            }
-            .spinner_V8m1 circle {
-              stroke-linecap: round;
-              animation: spinner_YpZS 1.5s ease-in-out infinite;
-            }
-            @keyframes spinner_zKoa {
-              100% {
-                transform: rotate(360deg);
-              }
-            }
-            @keyframes spinner_YpZS {
-              0% {
-                stroke-dasharray: 0 150;
-                stroke-dashoffset: 0;
-              }
-              47.5% {
-                stroke-dasharray: 42 150;
-                stroke-dashoffset: -16;
-              }
-              95%,
-              100% {
-                stroke-dasharray: 42 150;
-                stroke-dashoffset: -59;
-              }
-            }
-          </style>
           <g class="spinner_V8m1">
             <circle
               cx="12"
@@ -79,7 +52,6 @@
           </g>
         </svg>
       </div>
-      <h1 class="text">Loading...</h1>
     </div>
 
     <nav class="navigation">
@@ -109,12 +81,7 @@
       </div>
 
       <div class="shopping-lists-container">
-        <button
-          class="shopping-lists-btn"
-          name="listbtn"
-          id="listbtn"
-          onclick="openLink5()"
-        >
+        <button class="shopping-lists-btn" name="listbtn" id="list-btn">
           Shopping Lists
         </button>
       </div>
@@ -156,12 +123,12 @@
     <div class="menu-btn">
       <div class="menu-btn__burger"></div>
     </div>
-    
+
     <nav class="menu" id="menu">
       <ul id="menu-list">
-        <li><button onclick="openLink6()">Github Repository</button></li>
+        <li><button id="gh-link">Github Repository</button></li>
         <li>
-          <button id="listbtn" onclick="openLink5()">Shopping Lists</button>
+          <button id="listbtn">Shopping Lists</button>
         </li>
         <li>
           <button class="last" id="sign-out">
@@ -198,7 +165,7 @@
       </div>
 
       <div class="start">
-        <button class="startbtn" onclick="openLink3()">Get Started</button>
+        <button class="startbtn" id="startbtn">Get Started</button>
       </div>
     </div>
 
@@ -232,60 +199,5 @@
         </h2>
       </div>
     </article>
-
-    <script>
-      const listBtn = document.getElementById("listbtn");
-      const signOut = document.getElementById("sign-out");
-      const menu = document.getElementById("menu");
-      const menuBtn = document.querySelector(".menu-btn");
-      const menuList = document.getElementById("menu-list");
-
-      listBtn.addEventListener("click", () => {
-        console.log("pressed");
-        axios.post("/lists", {}).catch(err);
-      });
-
-      signOut.addEventListener("click", () => {
-        window.location.href = "/";
-        Cookies.remove("token");
-      });
-
-      let menuOpen = false;
-      menuBtn.addEventListener("click", () => {
-        if (!menuOpen) {
-          menuBtn.classList.add("open");
-          menuOpen = true;
-        } else {
-          menuBtn.classList.remove("open");
-          menuOpen = false;
-        }
-
-        if (menu.classList === "show") {
-          menu.classList.toggle("");
-        } else {
-          menu.classList.toggle("show");
-        }
-
-        if (menu.classList !== "show") {
-          menuList.style.display = "none";
-        }
-      });
-
-      menu.addEventListener("transitionend", (event) => {
-        if (event.propertyName === "height") {
-          if (menu.classList.contains("show")) {
-            menuList.style.display = "flex";
-          }
-        }
-      });
-
-      const loader = document.getElementById("preloader");
-      const page = document.querySelector('.body');
-      window.addEventListener("load", () => {
-        loader.style.display = "none";
-
-        page.classList.toggle('finished');
-      });
-    </script>
   </body>
 </html>

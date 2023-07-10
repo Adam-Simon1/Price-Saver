@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", function () {
     Cookies.set("priceCookie", 0, { expires: 1 });
   }
 
+  if(!Cookies.get("textareaCookie")){
+    localStorage.clear();
+  }
+
   const sendOptions = {
     method: "POST",
     headers: {

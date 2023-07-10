@@ -1,7 +1,6 @@
 //const mysql = require("mysql2");
 const { Client } = require("pg");
 const express = require("express");
-const expressSession = require("express-session");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv").config({
@@ -10,7 +9,7 @@ const dotenv = require("dotenv").config({
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const authUser = require("./authUser.js");
-const { table } = require("console");
+const validator = require("validator");
 
 const app = express();
 app.use(cookieParser());
@@ -21,6 +20,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'none'; frame-src 'none'; object-src 'self'; form-action 'self';"
+  );
+  next();
+});
 
 app.get("/", (req, res) => {
   const token = req.cookies.token;
@@ -78,21 +85,25 @@ app.post("/signup", (req, res) => {
   const username = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
+
   const queryInsert =
     "INSERT INTO accounts (username, email, password) VALUES ($1, $2, $3)";
   const queryEmail = "SELECT * FROM accounts WHERE email = $1";
 
   if (username && email && password) {
-    if (username.length < 3) {
+    const sanitizedUsername = validator.escape(validator.trim(username));
+    const sanitizedEmail = validator.normalizeEmail(validator.trim(email));
+    const sanitizedPassword = validator.escape(validator.trim(password));
+
+    if (sanitizedUsername.length < 3) {
       return res.render("signup", { invalidText: "Username is too short" });
     }
 
-    if (username.length > 15) {
+    if (sanitizedUsername.length > 15) {
       return res.render("signup", { invalidText: "Username is too long" });
     }
 
-    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (!emailRegex.test(email)) {
+    if (!validator.isEmail(sanitizedEmail)) {
       return res.render("signup", { invalidText: "Invalid email address" });
     }
 
@@ -183,7 +194,11 @@ app.post("/auth", (req, res) => {
               expiresIn: "24h",
             });
 
-            res.cookie("token", token);
+            res.cookie("token", token, {
+              httpOnly: true,
+              secure: true,
+              sameSite: "lax",
+            });
 
             res.redirect("/home");
           } else {
@@ -326,7 +341,8 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
         let columnFound = false;
         for (let i = 1; i <= columnCount; i++) {
           connection.query(
-            `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NULL AND id = ${userID}`,
+            `SELECT COUNT(*) AS empty_count FROM producttables WHERE table${i} IS NULL AND id = $1`,
+            [userID],
             (err, results) => {
               if (err) {
                 console.log("Empty error:", err);
