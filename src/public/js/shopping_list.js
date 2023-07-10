@@ -31,6 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
           text.textContent =
             "The limit of shopping lists is 20. If you want to procced, please remove a shopping list that you don't need.";
           div.appendChild(text);
+
+          const btn = document.createElement("button");
+          btn.classList.add("return-btn");
+          btn.textContent = "Return to shopping lists window";
+          div.appendChild(btn);
+
+          btn.addEventListener("click", () => {
+            window.location.href = "/shopping-lists";
+          });
         }
       });
 
