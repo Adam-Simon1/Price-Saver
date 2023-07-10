@@ -119,7 +119,7 @@ app.post("/signup", (req, res) => {
       });
     }
 
-    connection.query(queryEmail, [email], (err, results) => {
+    connection.query(queryEmail, [sanitizedEmail], (err, results) => {
       if (err) {
         console.log("Error checking email:", err);
         return;
@@ -127,28 +127,26 @@ app.post("/signup", (req, res) => {
 
       if (results.length > 0) {
         return res.render("signup", { invalidText: "Email already exists" });
-      }
-
-      bcrypt.genSalt(10, (error, salt) => {
-        if (error) {
-          console.log("Error generating salt:", error);
-          return;
-        }
-
-        bcrypt.hash(password, salt, (error, hash) => {
+      } else {
+        bcrypt.genSalt(10, (error, salt) => {
           if (error) {
-            console.log("Error hashing password:", error);
+            console.log("Error generating salt:", error);
             return;
           }
 
-          hashedPassword = hash;
-        });
-      });
+          bcrypt.hash(sanitizedPassword, salt, (error, hash) => {
+            if (error) {
+              console.log("Error hashing password:", error);
+              return;
+            }
 
-      setTimeout(() => {
+            hashedPassword = hash;
+          });
+        });
+
         connection.query(
           queryInsert,
-          [username, email, hashedPassword],
+          [sanitizedUsername, sanitizedEmail, hashedPassword],
           (error, results) => {
             if (error) {
               console.log("Error:", error);
@@ -158,7 +156,7 @@ app.post("/signup", (req, res) => {
             console.log("logged in succesfully");
           }
         );
-      }, 100);
+      }
     });
   }
 });
@@ -166,9 +164,13 @@ app.post("/signup", (req, res) => {
 app.post("/auth", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  query = "SELECT * FROM accounts WHERE email = $1";
+
+  const query = "SELECT * FROM accounts WHERE email = $1";
   if (email && password) {
-    connection.query(query, [email], (err, results) => {
+    const sanitizedEmail = validator.normalizeEmail(validator.trim(email));
+    const sanitizedPassword = validator.escape(validator.trim(password));
+
+    connection.query(query, [sanitizedEmail], (err, results) => {
       if (err) {
         console.log(err);
       }
@@ -177,7 +179,7 @@ app.post("/auth", (req, res) => {
       if (results.rows.length > 0) {
         const storedHashedPassword = results.rows[0].password;
 
-        bcrypt.compare(password, storedHashedPassword, (error, result) => {
+        bcrypt.compare(sanitizedPassword, storedHashedPassword, (error, result) => {
           if (error) {
             console.log("Error comparing passwords:", error);
             return;
@@ -186,7 +188,7 @@ app.post("/auth", (req, res) => {
           if (result) {
             const user = {
               id: results.rows[0].id,
-              email: email,
+              email: sanitizedEmail,
               username: results.rows[0].username,
             };
 
