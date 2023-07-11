@@ -5,24 +5,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   profileBtn.addEventListener("click", () => {
     console.log("pressed");
-    content.classList.toggle('show');
+    content.classList.toggle("show");
 
     if (content.classList !== "show") {
       dropdownList.style.display = "none";
     }
   });
 
-  content.addEventListener('transitionend', (event) => {
-    if(event.propertyName === "height"){
+  content.addEventListener("transitionend", (event) => {
+    if (event.propertyName === "height") {
       if (content.classList.contains("show")) {
         dropdownList.style.display = "flex";
       }
     }
-  })
+  });
 
-  content.addEventListener("click", (event) => {
-    event.preventDefault();
-    window.location.href = '/';
-    Cookies.remove('token');
+  content.addEventListener("click", () => {
+    console.log("Clicked");
+    const sendOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    };
+
+    fetch("/remove-cookie", sendOptions)
+      .then((response) => {
+        console.log(response);
+        window.location.href = "/";
+      })
+      .catch((err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
   });
 });

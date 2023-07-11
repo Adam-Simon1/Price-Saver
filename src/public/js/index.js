@@ -12,9 +12,14 @@ listBtn.addEventListener("click", () => {
   axios.post("/lists", {});
 });
 
-signOut.addEventListener("click", () => {
-  window.location.href = "/";
-  Cookies.remove("token");
+signOut.addEventListener("click", async (event) => {
+  try {
+    await fetch("/remove-token", { method: "POST" });
+    console.log("Cookie removed successfully");
+    window.location.href = "/";
+  } catch (error) {
+    console.log("Error removing cookie:", error);
+  }
 });
 
 github.addEventListener("click", () => {

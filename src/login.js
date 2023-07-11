@@ -12,12 +12,13 @@ const authUser = require("./authUser.js");
 const validator = require("validator");
 
 const app = express();
-app.use(cookieParser());
 
+app.use(cookieParser());
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/csv"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -54,11 +55,11 @@ app.get("/tables", authUser.authenticateToken, (req, res) => {
   res.render("tables", { Saved: null });
 });
 
-app.get("/shopping-lists", (req, res) => {
+app.get("/shopping-lists", authUser.authenticateToken, (req, res) => {
   res.render("shopping-lists", { tableCountEjs: null });
 });
 
-app.get("/saved-tables", (req, res) => {
+app.get("/saved-tables", authUser.authenticateToken, (req, res) => {
   res.render("saved-tables");
 });
 
@@ -168,7 +169,6 @@ app.post("/auth", (req, res) => {
   const query = "SELECT * FROM accounts WHERE email = $1";
   if (email && password) {
     const sanitizedEmail = validator.normalizeEmail(validator.trim(email));
-    const sanitizedPassword = validator.escape(validator.trim(password));
 
     connection.query(query, [sanitizedEmail], (err, results) => {
       if (err) {
@@ -179,7 +179,7 @@ app.post("/auth", (req, res) => {
       if (results.rows.length > 0) {
         const storedHashedPassword = results.rows[0].password;
 
-        bcrypt.compare(sanitizedPassword, storedHashedPassword, (error, result) => {
+        bcrypt.compare(password, storedHashedPassword, (error, result) => {
           if (error) {
             console.log("Error comparing passwords:", error);
             return;
@@ -196,11 +196,11 @@ app.post("/auth", (req, res) => {
               expiresIn: "24h",
             });
 
-            res.cookie("token", token, {
-              httpOnly: true,
-              secure: true,
-              sameSite: "lax",
-            });
+            const oneDay = 24 * 60 * 60 * 1000;
+
+            const expirationDate = new Date(Date.now() + oneDay);
+
+            res.cookie("token", token, { sameSite: "lax", httpOnly: true });
 
             res.redirect("/home");
           } else {
@@ -560,6 +560,14 @@ app.post("/autocomplete-data", (req, res) => {
       }
     }
   );
+});
+
+app.post("/remove-token", (req, res) => {
+  res.clearCookie("token");
+});
+
+app.post("/remove-cookie", (req, res) => {
+  res.clearCookie("token");
 });
 
 app.listen(process.env.PORT || 3000);
