@@ -1,4 +1,4 @@
-const listBtn = document.getElementById("list-btn");
+const listBtn = document.getElementById("listbtn");
 const signOut = document.getElementById("sign-out");
 const github = document.getElementById("gh-link");
 const startBtn = document.getElementById("startbtn");
@@ -12,14 +12,26 @@ listBtn.addEventListener("click", () => {
   axios.post("/lists", {});
 });
 
-signOut.addEventListener("click", async (event) => {
-  try {
-    await fetch("/remove-token", { method: "POST" });
-    console.log("Cookie removed successfully");
-    window.location.href = "/";
-  } catch (error) {
-    console.log("Error removing cookie:", error);
-  }
+signOut.addEventListener("click", (e) => {
+  e.preventDefault()
+  console.log("Clicked");
+  const sendOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  fetch("/remove-cookie", sendOptions)
+    .then((response) => {
+      window.location.href = '/'
+    })
+    
+    .catch((err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
 });
 
 github.addEventListener("click", () => {
