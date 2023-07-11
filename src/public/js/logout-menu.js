@@ -20,21 +20,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  content.addEventListener("click", () => {
+  content.addEventListener("click", (e) => {
+    e.preventDefault()
     console.log("Clicked");
     const sendOptions = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({}),
     };
 
     fetch("/remove-cookie", sendOptions)
       .then((response) => {
-        console.log(response);
-        window.location.href = "/";
+        window.location.href = '/'
       })
+      
       .catch((err) => {
         if (err) {
           console.log(err);

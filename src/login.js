@@ -200,7 +200,12 @@ app.post("/auth", (req, res) => {
 
             const expirationDate = new Date(Date.now() + oneDay);
 
-            res.cookie("token", token, { sameSite: "lax", httpOnly: true });
+            res.cookie("token", token, {
+              sameSite: "lax",
+              httpOnly: true,
+              secure: true,
+              expires: expirationDate,
+            });
 
             res.redirect("/home");
           } else {
@@ -562,12 +567,10 @@ app.post("/autocomplete-data", (req, res) => {
   );
 });
 
-app.post("/remove-token", (req, res) => {
-  res.clearCookie("token");
-});
-
 app.post("/remove-cookie", (req, res) => {
+  console.log("Remove");
   res.clearCookie("token");
+  res.send();
 });
 
 app.listen(process.env.PORT || 3000);
