@@ -281,7 +281,7 @@ button, a{
   display: none;
 }
 
-.menu-btn-container {
+.btn-nav{
   display: none;
 }
 
@@ -317,6 +317,22 @@ button, a{
   grid-column: 3/4;
   align-self: center;
   justify-self: center;
+}
+
+.langs-container-mobile{
+  margin-left: 3rem;
+}
+
+.langs-mobile {
+  width: 5rem;
+  height: 3.3rem;
+  background-image: url(../assets/english.png);
+  background-size: 5rem;
+  border-radius: 1rem;
+}
+
+.langs-mobile.sk {
+  background-image: url(../assets/slovakia.png);
 }
 
 @media only screen and (max-width: 1300px) {
@@ -459,16 +475,20 @@ button, a{
   }
 
   button.last::after {
-    content: "Sign out";
+    content: "";
     color: red;
   }
 
-  .border {
+  .btn-nav{
     grid-row: 1/2;
     grid-column: 2/3;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid var(--border-color);
   }
-
+  
   .menu-btn {
     position: relative;
     display: flex;

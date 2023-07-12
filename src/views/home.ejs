@@ -24,7 +24,7 @@
       href="assets/favicon-16x16.png"
     />
     <link rel="manifest" href="assets/site.webmanifest" />
-    <link rel="stylesheet" href="../css/spinner.css">
+    <link rel="stylesheet" href="../css/spinner.css" />
     <script src="../js/loader.js" defer></script>
     <script src="../js/logout-menu.js" defer></script>
     <script src="../js/index.js" defer></script>
@@ -123,11 +123,15 @@
       </div>
     </nav>
 
-    <div class="border"></div>
+    <nav class="btn-nav">
+      <div class="langs-container-mobile">
+        <button id="langs" class="langs-mobile"></button>
+      </div>
 
-    <div class="menu-btn">
-      <div class="menu-btn__burger"></div>
-    </div>
+      <div class="menu-btn">
+        <div class="menu-btn__burger"></div>
+      </div>
+    </nav>
 
     <nav class="menu" id="menu">
       <ul id="menu-list">
@@ -156,6 +160,7 @@
               <path d="M9 12h12l-3 -3" />
               <path d="M18 15l3 -3" />
             </svg>
+            Sign out
           </button>
         </li>
       </ul>

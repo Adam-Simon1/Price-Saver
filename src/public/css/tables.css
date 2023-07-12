@@ -283,33 +283,33 @@ table td:nth-child(4) {
   }
 
   #tablebtn {
-    width: 10rem;
+    width: 15rem;
   }
 }
 
 @media only screen and (max-width: 1200px) {
   body {
     grid-template-columns: 1fr;
-    grid-template-rows: 110px 120px 130px min-content 130px min-content 100px;
+    grid-template-rows: 110px 120px 130px 130px min-content 130px min-content 100px;
   }
 
   #table-container {
-    grid-row: 4/5;
-    grid-column: 1/2;
-  }
-
-  #table-container2 {
-    grid-row: 6/7;
-    grid-column: 1/2;
-  }
-
-  #h1-tesco {
     grid-row: 5/6;
     grid-column: 1/2;
   }
 
+  #table-container2 {
+    grid-row: 7/8;
+    grid-column: 1/2;
+  }
+
+  #h1-tesco {
+    grid-row: 6/7;
+    grid-column: 1/2;
+  }
+
   #h1-kaufland {
-    grid-row: 3/4;
+    grid-row: 4/5;
     grid-column: 1/2;
   }
 
@@ -320,7 +320,7 @@ table td:nth-child(4) {
 
   #total-price {
     grid-column: 1/2;
-    grid-row: 7/8;
+    grid-row: 8/9;
   }
 
   #total-price h1 {
@@ -328,7 +328,7 @@ table td:nth-child(4) {
   }
 
   #tablebtn {
-    width: 12rem;
+    width: 15rem;
   }
 
   .quantity-input {

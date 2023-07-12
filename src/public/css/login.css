@@ -266,5 +266,6 @@ body {
   grid-column: 3/4;
   align-self: center;
   justify-self: center;
+  margin-right: 3rem;
 }
 

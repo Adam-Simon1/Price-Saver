@@ -45,7 +45,7 @@
 
   "signUp": "Sign up",
   "name": "Name",
-  "haveAccount": "Sign up",
+  "haveAccount": "Do you already have an account?",
 
   "deniedAccess": "To access this page you have to sign in"
 }

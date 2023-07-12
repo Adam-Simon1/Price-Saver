@@ -43,6 +43,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   } catch (error) {}
 
+  try {
+    const btnMobile = document.querySelector(".langs-mobile");
+    btnMobile.addEventListener("click", () => {
+      if (btnMobile.classList.contains("sk")) {
+        btnMobile.classList.remove("sk");
+        Cookies.set("langAttribute", "en");
+        value = en;
+      } else {
+        btnMobile.classList.add("sk");
+        Cookies.set("langAttribute", "sk");
+        value = sk;
+      }
+
+      Cookies.set("langCookie", JSON.stringify(value), { expires: 30 });
+      updateTextContent(value);
+    });
+  } catch (error) {}
+
   updateTextContent(value);
 
   function loadFiles(array) {
@@ -53,10 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
   }
 
-  function updateTextContent(value) {
-    try {
-      // Home page
-      const svg = `<svg
+  const svg = `<svg
       xmlns="http://www.w3.org/2000/svg"
       class="icon-logout"
       width="27"
@@ -75,6 +90,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       <path d="M9 12h12l-3 -3" />
       <path d="M18 15l3 -3" />
     </svg>`;
+
+  function updateTextContent(value) {
+    try {
+      // Home page
       document.getElementById("list-btn").textContent = value.lists;
       document.getElementById("profile-btn").textContent = value.profile;
       document.querySelector(".link_github").textContent = value.gitHub;
@@ -129,7 +148,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       // Start page
-      document.getElementById("btn").textContent = value.signIn;
       document.getElementById("btn2").textContent = value.signIn;
       document.querySelector(".link_github").textContent = value.gitHub;
       document.querySelector(".h2-container>h2").textContent =
@@ -144,7 +162,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       // Sign in
-      document.getElementById("btn").textContent = value.signIn;
       document.querySelector(".link_github").textContent = value.gitHub;
       document.querySelector(".signin").textContent = value.signIn;
       document.querySelector(".title-signin").textContent = value.signIn;
@@ -160,7 +177,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       // Sign up
-      document.getElementById("btn").textContent = value.signIn;
       document.querySelector(".link_github").textContent = value.gitHub;
       document.getElementById("signupbtn").textContent = value.signUp;
       document.querySelector(".title-container>h1").textContent = value.signUp;
@@ -170,6 +186,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         .getElementById("password")
         .setAttribute("placeholder", value.password);
       document.querySelector(".signin-link").textContent = value.haveAccount;
+    } catch (error) {}
+
+    try {
+      // Home page mobile support
+      document.getElementById("gh-link").textContent = value.gitHub;
+      document.getElementById("listbtn").textContent = value.lists;
+      document.getElementById("sign-out").style.content = svg + value.signOut;
     } catch (error) {}
   }
 });
