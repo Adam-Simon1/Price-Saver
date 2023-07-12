@@ -1,0 +1,51 @@
+{
+  "welcome": "Welcome to",
+  "priceSavvy": "Price Savvy",
+  "gitHub": "My github repository",
+  "start": "Get Started",
+  "lists": "Shopping lists",
+  "profile": "Profile",
+  "searchPreview": "Search through sales",
+  "searchPreviewDesc": "Search thorugh the best sales available. Search, filter and sort the results.",
+  "listsPreview": "Create shopping lists",
+  "listsPreviewDesc": "Shooping lists are separated by shops, so you have them organized.",
+  "signOut": "Sign Out",
+
+  "dropDown": "Sort prices by:",
+  "dropDownDataLH": "Lowest to Highest",
+  "dropDownDataHL": "Highest to Lowest",
+  "dropDownDataAZ": "A-Z Sorted",
+  "dropDownDataZA": "Z-A Sorted",
+  "searchPlaceHolder": "Search for a product...",
+  "all": "All",
+  "changes": "Apply Changes",
+  "price": "Price:",
+  "finished": "Are you finished creating your list of products?",
+  "finishedDesc": "Proceed to the next page to create a shopping list of your products:",
+  "nextPage": "Go to the next page",
+
+  "createTable": "Create a Shopping List",
+  "save": "Save",
+  "tableProduct": "Product",
+  "tablePrice": "Price",
+  "tableQuantity": "Quantity",
+  "tableTotal": "Total Price",
+
+  "shoppingListsTitle": "Your Shopping Lists",
+  "shoppingLists": "Shopping List",
+
+  "startPageDesc": "No better way to save money on products",
+  "signIn": "Sign in",
+
+  "signInWith": "Sign in with GitHub",
+  "or": "or",
+  "email": "E-mail",
+  "password": "Password",
+  "dontHaveAccount": "Don't have an account?",
+
+  "signUp": "Sign up",
+  "name": "Name",
+  "haveAccount": "Sign up",
+
+  "deniedAccess": "To access this page you have to sign in"
+}

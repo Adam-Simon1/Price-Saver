@@ -57,7 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
           iconDiv.innerHTML += svgPath;
           h1Div.classList.add("table-container");
           h1Div.setAttribute("id", idArray[indexCounter]);
-          h1.textContent = `Shopping list ${i}`;
+
+          const lang = JSON.parse(Cookies.get('langCookie'));
+          h1.textContent = `${lang.shoppingLists} ${i}`;
           h1Div.appendChild(h1);
           h1Div.appendChild(iconDiv);
           div.appendChild(h1Div);

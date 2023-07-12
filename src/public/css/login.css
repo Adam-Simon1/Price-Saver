@@ -104,7 +104,7 @@ body {
   justify-self: center;
 }
 
-.title {
+.title-signin {
   font-family: quicksand_bold;
   font-size: 2.5rem;
   grid-row: 2/3;
@@ -176,7 +176,7 @@ body {
 
 .google img,
 .githubbtn img {
-  width: 2rem;
+  width: 2.5rem;
   padding-right: 0.7rem;
 }
 
@@ -247,5 +247,24 @@ body {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+}
+
+.langs {
+  width: 5rem;
+  height: 3.3rem;
+  background-image: url(../assets/english.png);
+  background-size: 5rem;
+  border-radius: 1rem;
+}
+
+.langs.sk {
+  background-image: url(../assets/slovakia.png);
+}
+
+.langs-container{
+  grid-row: 1/2;
+  grid-column: 3/4;
+  align-self: center;
+  justify-self: center;
 }
 

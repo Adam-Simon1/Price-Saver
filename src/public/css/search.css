@@ -231,7 +231,7 @@ input[type="checkbox"]:checked {
 }
 
 .apply_changes {
-  width: 9rem;
+  width: 10rem;
   height: 2rem;
   font-family: quicksand;
   font-size: 1.2rem;
@@ -259,7 +259,7 @@ input[type="checkbox"]:checked {
 }
 
 .reset {
-  width: 9rem;
+  width: 10rem;
   height: 2rem;
   font-family: quicksand;
   font-size: 1.2rem;
@@ -330,7 +330,7 @@ input[type="checkbox"]:checked {
 }
 
 #next-page {
-  width: 15rem;
+  width: 20rem;
   height: 3rem;
   border-radius: 1.5rem;
   box-shadow: 8px 6px 17px -5px rgba(0, 0, 0, 0.68);

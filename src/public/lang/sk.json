@@ -1,0 +1,51 @@
+{
+  "welcome": "Vitajte v",
+  "priceSavvy": "Price Savvy",
+  "gitHub": "Môj Github repositár",
+  "start": "Začať",
+  "lists": "Nákupné zoznamy",
+  "profile": "Profil",
+  "searchPreview": "Hľadajte produkty podľa akcií",
+  "searchPreviewDesc": "Hľadajte produkty podľa najlepších dostupných akcií. Hľadajte, filtrujte a zoraďte výsledky.",
+  "listsPreview": "Vytvárajte nákupné zoznamy",
+  "listsPreviewDesc": "Nákupné zoznamy sú zoradené podľa obchodov, takže sú jednoducho usporiadané.",
+  "signOut": "Odhlásiť sa",
+
+  "dropDown": "Zoraďte ceny podľa:",
+  "dropDownDataLH": "Od Najlacnejších",
+  "dropDownDataHL": "Od Najdrahších",
+  "dropDownDataAZ": "A-Z Zoradené",
+  "dropDownDataZA": "Z-A Zoradené",
+  "searchPlaceHolder": "Vyhľadajte nejaký produkt...",
+  "all": "Všetko",
+  "changes": "Aplikovať zmeny",
+  "price": "Cena:",
+  "finished": "Dokončili ste vytváranie zoznamu produktov?",
+  "finishedDesc": "Pokračujte na ďalšiu stránku a vytvorte si nákupný zoznam zo svojich produktov:",
+  "nextPage": "Pokračujte na ďalšiu stránku",
+
+  "createTable": "Vytvoriť nákupný zoznam",
+  "save": "Uložiť",
+  "tableProduct": "Produkt",
+  "tablePrice": "Cena",
+  "tableQuantity": "Množstvo",
+  "tableTotal": "Konečná cena",
+
+  "shoppingListsTitle": "Vaše nákupné zoznamy",
+  "shoppingLists": "Nákupný zoznam",
+
+  "startPageDesc": "Neexistuje lepší spôsob, ako ušetriť peniaze na produktoch",
+  "signIn": "Prihlásiť sa",
+
+  "signInWith": "Prihlásiť sa pomocou Github",
+  "or": "alebo",
+  "email": "E-mail",
+  "password": "Heslo",
+  "dontHaveAccount": "Nemáte ešte účet?",
+
+  "signUp": "Zaregistrovať sa",
+  "name": "Meno",
+  "haveAccount": "Už máte účet?",
+
+  "deniedAccess": "Pre prístup na túto stránku sa musíte prihlásiť"
+}

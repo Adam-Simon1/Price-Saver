@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
       h1Div.appendChild(h1);
     }
 
+    const lang = JSON.parse(Cookies.get('langCookie'));
+
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");
 
@@ -33,25 +35,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const productHeader = document.createElement("th");
     productHeader.classList.add("product_header");
-    const productHeaderText = document.createTextNode("Product");
+    const productHeaderText = document.createTextNode(lang.tableProduct);
     productHeader.appendChild(productHeaderText);
     headerRow.appendChild(productHeader);
 
     const priceHeader = document.createElement("th");
     priceHeader.classList.add("price_header");
-    const priceHeaderText = document.createTextNode("Price");
+    const priceHeaderText = document.createTextNode(lang.tablePrice);
     priceHeader.appendChild(priceHeaderText);
     headerRow.appendChild(priceHeader);
 
     const quantityHeader = document.createElement("th");
     quantityHeader.classList.add("quantity_header");
-    const quantityHeaderText = document.createTextNode("Quantity");
+    const quantityHeaderText = document.createTextNode(lang.tableQuantity);
     quantityHeader.appendChild(quantityHeaderText);
     headerRow.appendChild(quantityHeader);
 
     const totalPriceHeader = document.createElement("th");
     totalPriceHeader.classList.add("total_price_header");
-    const totalPriceHeaderText = document.createTextNode("Total Price");
+    const totalPriceHeaderText = document.createTextNode(lang.tableTotal);
     totalPriceHeader.appendChild(totalPriceHeaderText);
     headerRow.appendChild(totalPriceHeader);
 

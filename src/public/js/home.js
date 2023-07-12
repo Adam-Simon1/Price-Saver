@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Price cookie, retrieves the last displayed price after refreshing
     const cookie = Cookies.get("priceCookie");
     const cookieInt = parseFloat(cookie, 10);
-    if (cookieInt != 0) {
+    if (cookieInt !== 0) {
       priceH1Child.textContent = cookie + " €";
       totalPrice = cookieInt;
     }

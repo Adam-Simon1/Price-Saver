@@ -27,6 +27,8 @@
     <link rel="manifest" href="assets/site.webmanifest" />
     <script src="../js/loader.js" defer></script>
     <script src="../js/signin-link.js" defer></script>
+    <script src="../js/lang.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   </head>
   <body class="body">
     <div id="preloader">
@@ -77,6 +79,10 @@
         >
       </div>
 
+      <div class="langs-container">
+        <button id="langs" class="langs"></button>
+      </div>
+
       <div class="signinbtn-container">
         <button id="btn" class="signinbtn">Sign in</button>
       </div>
@@ -98,8 +104,8 @@
 
     <article class="create-list">
       <div class="text-list">
-        <h1>Create shopping lists</h1>
-        <h2>
+        <h1 id="search">Create shopping lists</h1>
+        <h2 id="search-desc">
           Based on the best sales available. Search, filter and sort the results
         </h2>
       </div>
@@ -119,13 +125,12 @@
         width="500px"
       />
       <div class="text-table">
-        <h1>Create tables from shopping lists</h1>
-        <h2>
+        <h1 id="create">Create tables from shopping lists</h1>
+        <h2 id="create-desc">
           Tables separated by shop, to keep it organized. It is also possible to
           change quantity.
         </h2>
       </div>
     </article>
-
   </body>
 </html>

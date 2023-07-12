@@ -28,8 +28,9 @@
     <script src="../js/loader.js" defer></script>
     <script src="../js/logout-menu.js" defer></script>
     <script src="../js/index.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js" defer></script>
+    <script src="../js/lang.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   </head>
   <body class="body">
     <div id="preloader">
@@ -78,6 +79,10 @@
         <a class="link_github" href="https://github.com/Adam-Simon1/Price-Saver"
           >Open my Repository</a
         >
+      </div>
+
+      <div class="langs-container">
+        <button id="langs" class="langs"></button>
       </div>
 
       <div class="shopping-lists-container">
@@ -171,8 +176,8 @@
 
     <article class="create-list">
       <div class="text-list">
-        <h1>Search through sales</h1>
-        <h2>
+        <h1 id="search">Search through sales</h1>
+        <h2 id="search-desc">
           Search thorugh the best sales available. Search, filter and sort the
           results
         </h2>
@@ -193,8 +198,8 @@
         width="500px"
       />
       <div class="text-table">
-        <h1>Create shopping lists</h1>
-        <h2>
+        <h1 id="create">Create shopping lists</h1>
+        <h2 id="create-desc">
           Shooping lists are separated by shops, so you have them organized.
         </h2>
       </div>

@@ -38,7 +38,7 @@ body {
   transform: translateY(100vh);
 }
 
-.title {
+.title-no-access {
   font-family: quicksand_bold;
   font-size: 2rem;
   color: var(--text-color);
@@ -93,3 +93,4 @@ body {
   align-items: center;
   overflow: hidden;
 }
+
