@@ -1,10 +1,15 @@
-const listBtn = document.getElementById("list-btn");
+const listBtn = document.getElementById("listbtn");
 const signOut = document.getElementById("sign-out");
 const github = document.getElementById("gh-link");
 const startBtn = document.getElementById("startbtn");
 const menu = document.getElementById("menu");
 const menuBtn = document.querySelector(".menu-btn");
 const menuList = document.getElementById("menu-list");
+const account = document.getElementById("account-mobile");
+
+account.addEventListener('click', (e) => {
+  e.preventDefault();
+})
 
 listBtn.addEventListener("click", () => {
   console.log("pressed");

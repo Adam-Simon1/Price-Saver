@@ -235,7 +235,7 @@ button, a{
 .dropdown-content {
   display: block;
   position: absolute;
-  background-color: #1e293b;
+  background-color: var(--input-color);
   min-width: 11rem;
   box-shadow: 8px 6px 17px -5px rgba(0, 0, 0, 0.68);
   -webkit-box-shadow: 8px 6px 17px -5px rgba(0, 0, 0, 0.68);
@@ -245,23 +245,27 @@ button, a{
   margin-top: 2rem;
   height: 0rem;
   transition: height 0.3s ease-in-out;
-  cursor: pointer;
 }
 
 .dropdown-content.show {
-  height: 3rem;
+  height: 6.4rem;
 }
 
 .dropdown-content a {
-  color: var(--background-color);
+  border-radius: 1.5rem;
   padding: 12px 16px;
   text-decoration: none;
-  border-radius: 1.5rem;
   display: none;
   justify-content: center;
   font-size: 1.3rem;
   flex-direction: row;
+  color: white;
+  cursor:auto;
+}
+
+.dropdown-content>:nth-child(2){
   color: red;
+  cursor: pointer;
 }
 
 .icon-logout {
@@ -269,7 +273,7 @@ button, a{
   stroke: red;
 }
 
-.dropdown-content a:hover {
+.dropdown-content :nth-child(2):hover {
   background-color: #e7b8b8;
 }
 
@@ -438,7 +442,7 @@ button, a{
   }
 
   .menu.show {
-    height: 10rem;
+    height: 13rem;
   }
 
   .menu ul li {
@@ -451,7 +455,7 @@ button, a{
     border-radius: 1.5rem;
   }
 
-  .menu ul li button {
+  .menu ul li button, a {
     color: var(--text-color);
     border: none;
     background-color: var(--input-color);
@@ -469,9 +473,13 @@ button, a{
     flex-direction: column;
   }
 
-  .menu ul > li:nth-child(3) {
+  .menu ul > li:nth-child(4) {
     margin-bottom: 0rem;
     color: red;
+  }
+
+  .menu ul > li:nth-child(1) {
+    cursor: auto;
   }
 
   button.last::after {

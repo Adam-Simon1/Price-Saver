@@ -44,7 +44,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js https://cdn.jsdelivr.net/npm/github-login-oauth/dist/github-login.min.js; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'none'; frame-src 'none'; object-src 'self'; form-action 'self';"
+    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'none'; frame-src 'none'; object-src 'self'; form-action 'self';"
   );
   next();
 });
@@ -681,6 +681,11 @@ app.post("/remove-cookie", (req, res) => {
   console.log("Remove");
   res.clearCookie("token");
   res.send();
+});
+
+app.post("/account-name", authUser.authenticateToken, (req, res) => {
+  const username = req.user.username;
+  res.json({ username: username });
 });
 
 app.listen(process.env.PORT || 3000);

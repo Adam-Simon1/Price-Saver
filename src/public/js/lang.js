@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const btn = document.querySelector(".langs");
   const langCookie = Cookies.get("langCookie");
   const langAttribute = Cookies.get("langAttribute");
-  console.log(en, sk);
 
   try {
     if (langCookie) {
