@@ -13,6 +13,7 @@ const validator = require("validator");
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
 const session = require("cookie-session");
+const { strict } = require("assert");
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -32,9 +33,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    name: "gh-session",
+    keys: process.env.SESSION_SECRET,
+    maxAge: 24 * 60 * 60 * 1000,
+    secure: true,
+    sameSite: "lax",
+    httpOnly: true,
   })
 );
 
