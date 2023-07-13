@@ -12,7 +12,7 @@ const authUser = require("./authUser.js");
 const validator = require("validator");
 const passport = require("passport");
 const GitHubStrategy = require("passport-github2").Strategy;
-const session = require("express-session");
+const session = require("cookie-session");
 
 passport.serializeUser(function (user, done) {
   done(null, user);
@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 app.use(
   session({
-    secret: "1u3i25hu99n3&$*r312@#$9F3dDFwe",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })

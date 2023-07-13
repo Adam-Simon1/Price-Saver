@@ -1,4 +1,5 @@
-const listBtn = document.getElementById("listbtn");
+const listBtnMobile = document.getElementById("listbtn");
+const listBtn = document.getElementById("list-btn");
 const signOut = document.getElementById("sign-out");
 const github = document.getElementById("gh-link");
 const startBtn = document.getElementById("startbtn");
@@ -10,6 +11,12 @@ const account = document.getElementById("account-mobile");
 account.addEventListener('click', (e) => {
   e.preventDefault();
 })
+
+listBtnMobile.addEventListener("click", () => {
+  console.log("pressed");
+  window.location.href = "/shopping-lists";
+  axios.post("/lists", {});
+});
 
 listBtn.addEventListener("click", () => {
   console.log("pressed");
