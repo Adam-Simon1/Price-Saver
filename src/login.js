@@ -10,6 +10,17 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const authUser = require("./authUser.js");
 const validator = require("validator");
+const passport = require("passport");
+const GitHubStrategy = require("passport-github2").Strategy;
+const session = require("express-session");
+
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (obj, done) {
+  done(null, obj);
+});
 
 const app = express();
 
@@ -18,6 +29,14 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/csv"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+app.use(
+  session({
+    secret: "1u3i25hu99n3&$*r312@#$9F3dDFwe",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -25,7 +44,7 @@ app.set("views", path.join(__dirname, "views"));
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'none'; frame-src 'none'; object-src 'self'; form-action 'self';"
+    "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js https://cdn.jsdelivr.net/npm/github-login-oauth/dist/github-login.min.js; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'none'; frame-src 'none'; object-src 'self'; form-action 'self';"
   );
   next();
 });
@@ -81,8 +100,50 @@ connection.connect((error) => {
   console.log("Connected");
 });
 
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      callbackURL: process.env.GITHUB_CALLBACK_URL,
+    },
+    function (accessToken, refreshToken, profile, done) {
+      process.nextTick(function () {
+        const githubId = profile.id;
+        const githubName = profile.username;
+        const githubEmail = profile.email;
+        connection.query(
+          "SELECT * FROM users WHERE github_id = $1",
+          [githubId],
+          (err, results) => {
+            if (err) {
+              console.log("Error selecting github id:", err);
+            }
+
+            console.log(results.rows.length);
+            if (results.rows.length > 0) {
+              return done(null, profile);
+            } else {
+              connection.query(
+                "INSERT INTO users (github_id, name, email) VALUES ($1, $2, $3)",
+                [githubId, githubName, githubEmail],
+                (err, results) => {
+                  if (err) {
+                    console.log("Error inserting account data into db:", err);
+                  }
+                }
+              );
+
+              return done(null, profile);
+            }
+          }
+        );
+      });
+    }
+  )
+);
+
 app.post("/signup", (req, res) => {
-  let hashedPassword;
   const username = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
@@ -94,7 +155,6 @@ app.post("/signup", (req, res) => {
   if (username && email && password) {
     const sanitizedUsername = validator.escape(validator.trim(username));
     const sanitizedEmail = validator.normalizeEmail(validator.trim(email));
-    const sanitizedPassword = validator.escape(validator.trim(password));
 
     if (sanitizedUsername.length < 3) {
       return res.render("signup", { invalidText: "Username is too short" });
@@ -135,28 +195,28 @@ app.post("/signup", (req, res) => {
             return;
           }
 
-          bcrypt.hash(sanitizedPassword, salt, (error, hash) => {
+          bcrypt.hash(password, salt, (error, hash) => {
             if (error) {
               console.log("Error hashing password:", error);
               return;
             }
 
-            hashedPassword = hash;
+            const hashedPassword = hash;
+
+            connection.query(
+              queryInsert,
+              [sanitizedUsername, sanitizedEmail, hashedPassword],
+              (error, results) => {
+                if (error) {
+                  console.log("Error:", error);
+                }
+
+                res.redirect("/signin");
+                console.log("logged in succesfully");
+              }
+            );
           });
         });
-
-        connection.query(
-          queryInsert,
-          [sanitizedUsername, sanitizedEmail, hashedPassword],
-          (error, results) => {
-            if (error) {
-              console.log("Error:", error);
-            }
-
-            res.redirect("/signin");
-            console.log("logged in succesfully");
-          }
-        );
       }
     });
   }
@@ -223,6 +283,45 @@ app.post("/auth", (req, res) => {
   }
 });
 
+app.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["user:email"] }),
+  function (req, res) {}
+);
+
+app.get(
+  "/auth/github/callback",
+  passport.authenticate("github", { failureRedirect: "/signin" }),
+  (req, res) => {
+    const userId = req.user.id;
+    connection.query(
+      "SELECT * FROM users WHERE github_id = $1",
+      [userId],
+      (err, results) => {
+        const user = {
+          id: results.rows[0].id,
+          username: results.rows[0].name,
+        };
+
+        const token = jwt.sign(user, process.env.JWT_SECRET, {
+          expiresIn: "24h",
+        });
+
+        const oneDay = 24 * 60 * 60 * 1000;
+        const expirationDate = new Date(Date.now() + oneDay);
+        res.cookie("token", token, {
+          sameSite: "lax",
+          httpOnly: true,
+          secure: true,
+          expires: expirationDate,
+        });
+
+        res.redirect("/home");
+      }
+    );
+  }
+);
+
 app.get("/home", authUser.authenticateToken, (req, res) => {
   res.render("home");
 });
@@ -236,24 +335,6 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
   let serializedTesco;
   let serializedKaufland;
   let combinedArray;
-
-  if (columnArray.length == 0) {
-    connection.query(
-      "SELECT idarray FROM elementid WHERE id = $1",
-      [userID],
-      (err, results) => {
-        if (err) {
-          console.log("Error selecting id array:", err);
-        } else {
-          if (results.rows.length > 0) {
-            const idArray = JSON.parse(results.rows[0].idarray);
-            console.log(idArray);
-            columnArray = idArray;
-          }
-        }
-      }
-    );
-  }
 
   if (arrayDataTesco && arrayDataKaufland) {
     serializedTesco = JSON.stringify(arrayDataTesco);
@@ -337,6 +418,25 @@ app.post("/table/data", authUser.authenticateToken, (req, res) => {
       );
     } else {
       console.log("User id exists, checking empty columns...");
+
+      if (columnArray.length == 0) {
+        connection.query(
+          "SELECT idarray FROM elementid WHERE id = $1",
+          [userID],
+          (err, results) => {
+            if (err) {
+              console.log("Error selecting id array:", err);
+            } else {
+              if (results.rows.length > 0) {
+                const idArray = JSON.parse(results.rows[0].idarray);
+                console.log(idArray);
+                columnArray = idArray;
+              }
+            }
+          }
+        );
+      }
+
       connection.query(countEmptyColumnQuery, (err, results) => {
         if (err) {
           console.log(err);
@@ -535,8 +635,12 @@ app.post("/table-count", authUser.authenticateToken, (req, res) => {
     if (err) {
       console.log("Error extracting id array:", err);
     } else {
-      const tableCount = results.rows[0].idarray;
-      res.json({ tableCount: tableCount });
+      if (results.rows.lenght > 0) {
+        const tableCount = results.rows[0].idarray;
+        res.json({ tableCount: tableCount });
+      } else {
+        res.json({ tableCount: [] });
+      }
     }
   });
 });
@@ -568,6 +672,12 @@ app.post("/autocomplete-data", (req, res) => {
 });
 
 app.post("/remove-cookie", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      console.error("Error during logout:", err);
+    }
+    req.session.destroy();
+  });
   console.log("Remove");
   res.clearCookie("token");
   res.send();

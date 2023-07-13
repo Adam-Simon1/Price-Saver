@@ -29,6 +29,7 @@
     <script src="js/signup-link.js" defer></script>
     <script src="js/signin-link.js" defer></script>
     <script src="../js/lang.js" defer></script>
+    <script src="../js/github-auth.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
   </head>
 
@@ -92,7 +93,7 @@
 
     <form action="/auth" method="post" class="login-container" id="login-form">
       <div class="github-container">
-        <button class="githubbtn">
+        <button class="githubbtn" id="github-login-btn">
           <img src="../assets/github.png" alt="" />
           Sign in with Github
         </button>

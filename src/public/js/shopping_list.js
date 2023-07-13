@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch("/table-count", { method: "POST" })
       .then((response) => response.json())
       .then((data) => {
-        const tableCount = JSON.parse(data.tableCount).length;
+        console.log(data.tableCount);
+        const tableCount = data.tableCount.length;
         console.log(tableCount);
         const div = document.getElementById("saved-container");
 
@@ -25,6 +26,15 @@ document.addEventListener("DOMContentLoaded", function () {
           text.classList.add("saved");
           text.textContent = "Shopping list saved successfully";
           div.appendChild(text);
+          axios
+            .post("/table/data", {
+              arrayDataTesco: itemArrayTesco,
+              arrayDataKaufland: itemArrayKaufland,
+            })
+            .then((response) => {})
+            .catch((err) => {
+              console.log("Error sending data:", err);
+            });
         } else {
           const text = document.createElement("p");
           text.classList.add("saved");
@@ -41,16 +51,6 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = "/shopping-lists";
           });
         }
-      });
-
-    axios
-      .post("/table/data", {
-        arrayDataTesco: itemArrayTesco,
-        arrayDataKaufland: itemArrayKaufland,
-      })
-      .then((response) => {})
-      .catch((err) => {
-        console.log("Error sending data:", err);
       });
   });
 
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
       h1Div.appendChild(h1);
     }
 
-    const lang = JSON.parse(Cookies.get('langCookie'));
+    const lang = JSON.parse(Cookies.get("langCookie"));
 
     const table = document.createElement("table");
     const tableBody = document.createElement("tbody");

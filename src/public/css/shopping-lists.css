@@ -20,7 +20,7 @@ html {
   --link-color: #95cfff;
 }
 
-button{
+button {
   cursor: pointer;
 }
 
@@ -89,6 +89,7 @@ body {
 
 .empty-div h1 {
   color: #74777b;
+  font-size: 2rem;
 }
 
 .start-btn {
@@ -123,7 +124,9 @@ body {
   border: none;
   height: 3rem;
   width: 25rem;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  box-shadow: 8px 6px 17px -5px rgba(0, 0, 0, 0.68);
+  -webkit-box-shadow: 8px 6px 17px -5px rgba(0, 0, 0, 0.68);
+  -moz-box-shadow: 8px 6px 17px -5px rgba(0, 0, 0, 0.68);
   background-color: #2cc185;
   color: white;
   transition: transform 0.2s ease;
