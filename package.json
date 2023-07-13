@@ -31,7 +31,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.3.5",
     "node-cron": "^3.0.2",
-    "passport": "^0.6.0",
+    "passport": "^0.5.3",
     "passport-github2": "^0.1.12",
     "path": "^0.12.7",
     "pg": "^8.11.1",
