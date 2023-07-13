@@ -174,14 +174,14 @@ button, a{
 .shop-list,
 .table {
   border-radius: 1.5rem;
-  border: 1px solid #74777b;
+  max-width: 200%;
 }
 
 .create-list {
   grid-row: 4/5;
   grid-column: 2/3;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.1fr;
   grid-template-rows: 0.5fr;
   justify-content: center;
   align-items: center;
