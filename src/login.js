@@ -680,7 +680,7 @@ app.post("/remove-cookie", (req, res) => {
     if (err) {
       console.error("Error during logout:", err);
     }
-    req.session.destroy();
+    req.session = null
   });
   console.log("Remove");
   res.clearCookie("token");
