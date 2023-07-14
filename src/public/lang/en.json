@@ -9,6 +9,8 @@
   "searchPreviewDesc": "Search thorugh the best sales available. Search, filter and sort the results.",
   "listsPreview": "Create shopping lists",
   "listsPreviewDesc": "Shooping lists are separated by shops, so you have them organized.",
+  "savedListsPreview": "Save shopping lists",
+  "savedListsPreviewDesc": "Shooping lists can be saved and used later.",
   "signOut": "Sign Out",
 
   "dropDown": "Sort prices by:",

@@ -106,6 +106,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("create").textContent = value.listsPreview;
       document.getElementById("create-desc").textContent =
         value.listsPreviewDesc;
+      document.getElementById("saved-title").textContent =
+        value.savedListsPreview;
+      document.getElementById("saved-desc").textContent =
+        value.savedListsPreviewDesc;
     } catch (error) {}
 
     try {
@@ -115,9 +119,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .setAttribute("placeholder", value.searchPlaceHolder);
       document.getElementById("label-all").textContent = value.all;
       document.getElementById("apply-changes").textContent = value.changes;
-      document.getElementById(
-        "price-h1"
-      ).innerHTML = `${value.price} <span></span>`;
       document.getElementById("button-input");
       document.getElementById("dropbtn").textContent = value.dropDown;
       document.querySelector("[data-value='lowest-highest']").textContent =
@@ -157,6 +158,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("create").textContent = value.listsPreview;
       document.getElementById("create-desc").textContent =
         value.listsPreviewDesc;
+      document.getElementById("saved-title").textContent =
+        value.savedListsPreview;
+      document.getElementById("saved-desc").textContent =
+        value.savedListsPreviewDesc;
     } catch (error) {}
 
     try {
